@@ -1,0 +1,10 @@
+{
+    "database": {
+        "user": "root",
+        "password": "",
+        "host": "localhost",
+        "name": "tecneu"
+    },
+    "listenAddress": "localhost",
+    "listenPort": "3000"
+}
