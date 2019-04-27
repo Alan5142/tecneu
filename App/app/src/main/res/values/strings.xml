@@ -1,0 +1,50 @@
+<resources>
+    <string name="app_name">Tecneu</string>
+
+    <string name="login_username">Nombre de usuario</string>
+    <string name="login_password">Contraseña</string>
+    <string name="login_login_btn">Ingresar</string>
+    <string name="login_forgotten_password">Olvide mi contraseña</string>
+
+    <string name="title_activity_main_screen">Tecneu</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="nav_header_title">Nombre de usuario</string>
+    <string name="nav_header_subtitle">micorreo@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+
+    <string name="action_about">Acerca de</string>
+
+    <string name="nav_start">Inicio</string>
+    <string name="nav_orders">Pedidos</string>
+    <string name="nav_stock">Stock</string>
+    <string name="nav_create_user">Crear usuario</string>
+    <string name="nav_environment">Ambiente</string>
+    <string name="nav_settings">Ajustes</string>
+    <string name="nav_close_session_btn">Cerrar sesión</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="cuser_fragment_create_user">Crear usuario</string>
+    <string name="cuser_fragment_standard_user_radio">Estándar</string>
+    <string name="cuser_fragment_master_user_radio">Master</string>
+    <string name="cuser_fragment_admin_user_radio">Administrador</string>
+    <string name="cuser_fragment_permissions">Permisos</string>
+    <string name="cuser_fragment_repeat_password">Repita la contraseña</string>
+    <string name="cuser_fragment_password">Contraseña</string>
+    <string name="cuser_fragment_user_name">Nombre de usuario</string>
+
+    <string name="ambient_fragment_humidity">Humedad</string>
+    <string name="ambient_fragment_temperature">Temperatura</string>
+    <string name="ambient_fragment_gas">Gas</string>
+    <string name="ambient_fragment_optim_temp">Temperatura óptima</string>
+    <string name="ambient_fragment_accept_btn">Aceptar</string>
+
+    <string name="fragment_main_orders_search_orders_btn">Consultar pedidos</string>
+    <string name="fragment_main_orders_delete_products_btn">Eliminar productos</string>
+    <string name="fragment_main_orders_modify_orders_btn">Modificar pedidos</string>
+    <string name="fragment_main_orders_create_orders_btn">Crear pedido</string>
+</resources>
