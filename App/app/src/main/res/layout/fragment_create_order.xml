@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".CreateOrder">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/fragment_create_order_provider_search"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:hint="@string/fragment_create_order_provider_search"
+            android:inputType="textPersonName" />
+
+        <Button
+            android:id="@+id/fragment_create_order_provider_search_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/fragment_create_order_search_btn" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/fragment_create_order_product_search"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:hint="@string/fragment_create_order_product_search"
+            android:inputType="textPersonName" />
+
+        <Button
+            android:id="@+id/fragment_create_order_product_search_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/fragment_create_order_search_btn" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/fragment_create_order_product_info"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:hint="@string/fragment_create_order_product_info" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <EditText
+            android:id="@+id/fragment_create_order_product_quantity"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.9"
+            android:ems="10"
+            android:hint="@string/fragment_create_order_product_quantity"
+            android:inputType="textPersonName" />
+
+        <Button
+            android:layout_weight="0.1"
+            android:id="@+id/fragment_create_order_product_add_btn"
+            android:text="@string/fragment_create_order_product_add_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/fragment_create_order_order_details"
+        android:layout_width="match_parent"
+        android:layout_height="300dp">
+
+    </ListView>
+
+    <Button
+        android:text="@string/fragment_create_order_order_create_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

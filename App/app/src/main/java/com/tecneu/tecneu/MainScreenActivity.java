@@ -26,7 +26,8 @@ public class MainScreenActivity extends AppCompatActivity
         CreateUserFragment.OnFragmentInteractionListener,
         AmbientFragment.OnFragmentInteractionListener,
         MainOrdersFragment.OnFragmentInteractionListener,
-        ViewOrdersFragment.OnListFragmentInteractionListener {
+        ViewOrdersFragment.OnListFragmentInteractionListener,
+        CreateOrder.OnFragmentInteractionListener {
 
     DrawerLayout _drawer;
     Toolbar _toolbar;
@@ -51,11 +52,16 @@ public class MainScreenActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        FragmentManager fm = getSupportFragmentManager();
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+        } else if (fm.getBackStackEntryCount() > 0) {
+            fm.popBackStack();
         } else {
             super.onBackPressed();
         }
+
+
     }
 
     @Override
@@ -78,11 +84,12 @@ public class MainScreenActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         Fragment fragment = null;
+        getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         switch (item.getItemId()) {
             case R.id.nav_start:
                 break;
             case R.id.nav_orders:
-                fragment = MainOrdersFragment.newInstance();
+                fragment = ViewOrdersFragment.newInstance();
                 break;
             case R.id.nav_stock:
                 break;

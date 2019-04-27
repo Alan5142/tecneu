@@ -98,7 +98,6 @@ public class ViewOrdersFragment extends Fragment {
         menu.clear();
         inflater.inflate(R.menu.view_order, menu);
 
-
         final MenuItem searchItem = menu.findItem(R.id.view_order_action_search);
         final SearchView searchView = (SearchView) searchItem.getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -114,6 +113,21 @@ public class ViewOrdersFragment extends Fragment {
                 return false;
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.view_order_create_order:
+                Objects.requireNonNull(getActivity())
+                        .getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragment, CreateOrder.newInstance())
+                        .addToBackStack(null)
+                        .commit();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     /**

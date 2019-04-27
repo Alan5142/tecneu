@@ -47,4 +47,15 @@
     <string name="fragment_main_orders_delete_products_btn">Eliminar productos</string>
     <string name="fragment_main_orders_modify_orders_btn">Modificar pedidos</string>
     <string name="fragment_main_orders_create_orders_btn">Crear pedido</string>
+
+    <string name="view_order_add">Crear</string>
+    <string name="view_order_search">Buscar</string>
+
+    <string name="fragment_create_order_search_btn">Buscar</string>
+    <string name="fragment_create_order_provider_search">Nombre del provedor</string>
+    <string name="fragment_create_order_product_search">Busqueda de producto</string>
+    <string name="fragment_create_order_product_quantity">Cantidad</string>
+    <string name="fragment_create_order_product_add_btn">Añadir</string>
+    <string name="fragment_create_order_product_info">Información del producto</string>
+    <string name="fragment_create_order_order_create_btn">Crear pedido</string>
 </resources>

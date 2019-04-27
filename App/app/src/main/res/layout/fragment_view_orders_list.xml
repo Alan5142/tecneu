@@ -10,4 +10,5 @@
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
     tools:context=".ViewOrdersFragment"
-    tools:listitem="@layout/fragment_view_orders" />
+    tools:listitem="@layout/fragment_view_orders" >
+</android.support.v7.widget.RecyclerView>
