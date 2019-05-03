@@ -2,7 +2,7 @@
 import * as express from 'express';
 import * as config from './config.json';
 import * as userController from './controllers/user.controller';
-
+let bodyParser = require('body-parser')
 class Server {
     public app: express.Application;
 
@@ -20,10 +20,13 @@ class Server {
         //create expressjs application
         this.app = express();
         
+        this.app.use(bodyParser.urlencoded({ extended: false }))
+        // parse application/json
+        this.app.use(bodyParser.json())
+
         this.routes();
 
-        this.app.get('/', (req, res) => res.send('Hello World!'));
-        
+        this.app.get('/', (req, res) => res.send(''));        
     }
 
     public run(): void {
@@ -32,8 +35,10 @@ class Server {
 
     private routes() {
         const router = express.Router();
-        this.app.use('/users', new userController.UserController().routes);
-        this.app.use(router);
+        const apiRouter = express.Router();
+        router.use('/users', new userController.UserController().routes);
+        apiRouter.use('/api', router);
+        this.app.use(apiRouter);
     }
 }
 new Server().run();

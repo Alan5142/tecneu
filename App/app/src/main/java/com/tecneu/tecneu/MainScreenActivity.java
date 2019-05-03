@@ -1,7 +1,10 @@
 package com.tecneu.tecneu;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -20,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.tecneu.tecneu.dummy.DummyContent;
+import com.tecneu.tecneu.services.UserService;
 
 public class MainScreenActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -47,6 +51,12 @@ public class MainScreenActivity extends AppCompatActivity
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.getHeaderView(0).findViewById(R.id.nav_header_close_session).setOnClickListener(v -> {
+            UserService.closeSession(this);
+            Intent intent = new Intent(this, SignInActivity.class);
+            finish();
+            startActivity(intent);
+        });
     }
 
     @Override

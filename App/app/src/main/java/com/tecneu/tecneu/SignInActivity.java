@@ -6,6 +6,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import com.tecneu.tecneu.services.OnLoginRequest;
+import com.tecneu.tecneu.services.UserService;
+
+import org.json.JSONException;
+
 
 public class SignInActivity extends AppCompatActivity {
 
@@ -23,10 +30,31 @@ public class SignInActivity extends AppCompatActivity {
         _signInButton = findViewById(R.id.login_sign_in_btn);
         _forgottenButton = findViewById(R.id.login_forgotten_password_btn);
 
-        _signInButton.setOnClickListener((View v) -> {
-            Intent intent = new Intent(this, MainScreenActivity.class);
+        if (UserService.isLoggedIn(this)) {
+            Intent intent = new Intent(SignInActivity.this, MainScreenActivity.class);
             finish();
             startActivity(intent);
+        }
+
+        _signInButton.setOnClickListener((View v) -> {
+            try {
+                UserService.login(this, _usernameText.getText().toString(),
+                        _passwordText.getText().toString(), new OnLoginRequest() {
+                    @Override
+                    public void onSuccess() {
+                        Intent intent = new Intent(SignInActivity.this, MainScreenActivity.class);
+                        finish();
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onError() {
+                        Toast.makeText(SignInActivity.this, "Las credenciales estan mal", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } catch (JSONException e) {
+                Toast.makeText(this, "No se pudo iniciar sesión", Toast.LENGTH_SHORT).show();
+            }
         });
     }
 }
