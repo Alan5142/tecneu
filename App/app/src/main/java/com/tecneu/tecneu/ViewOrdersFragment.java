@@ -1,15 +1,11 @@
 package com.tecneu.tecneu;
 
-import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,10 +13,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.tecneu.tecneu.Orders.CreateOrder;
 import com.tecneu.tecneu.dummy.DummyContent;
 import com.tecneu.tecneu.dummy.DummyContent.DummyItem;
 
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -68,7 +64,8 @@ public class ViewOrdersFragment extends Fragment {
             Context context = view.getContext();
             recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            recyclerViewAdapter = new ViewOrdersRecyclerViewAdapter(DummyContent.ITEMS, mListener);
+            recyclerViewAdapter = new ViewOrdersRecyclerViewAdapter(DummyContent.ITEMS, item -> {
+            });
             recyclerView.setAdapter(recyclerViewAdapter);
         }
         return view;

@@ -8,17 +8,23 @@
             android:id="@+id/nav_start"
             android:title="@string/nav_start" />
         <item
+            android:id="@+id/nav_environment"
+            android:title="@string/nav_environment" />
+        <item
             android:id="@+id/nav_orders"
             android:title="@string/nav_orders" />
         <item
             android:id="@+id/nav_stock"
             android:title="@string/nav_stock" />
         <item
-            android:id="@+id/nav_create_user"
-            android:title="@string/nav_create_user" />
+            android:id="@+id/nav_products"
+            android:title="@string/nav_products" />
         <item
-            android:id="@+id/nav_environment"
-            android:title="@string/nav_environment" />
+            android:id="@+id/nav_providers"
+            android:title="@string/nav_providers" />
+        <item
+            android:id="@+id/nav_users"
+            android:title="@string/nav_users" />
         <item
             android:id="@+id/nav_settings"
             android:title="@string/nav_settings" />

@@ -1,5 +1,6 @@
 package com.tecneu.tecneu;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,7 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.tecneu.tecneu.services.OnLoginRequest;
+import com.tecneu.tecneu.services.OnRequest;
 import com.tecneu.tecneu.services.UserService;
 
 import org.json.JSONException;
@@ -39,9 +40,9 @@ public class SignInActivity extends AppCompatActivity {
         _signInButton.setOnClickListener((View v) -> {
             try {
                 UserService.login(this, _usernameText.getText().toString(),
-                        _passwordText.getText().toString(), new OnLoginRequest() {
+                        _passwordText.getText().toString(), new OnRequest() {
                     @Override
-                    public void onSuccess() {
+                    public void onSuccess(Object result) {
                         Intent intent = new Intent(SignInActivity.this, MainScreenActivity.class);
                         finish();
                         startActivity(intent);
@@ -56,5 +57,10 @@ public class SignInActivity extends AppCompatActivity {
                 Toast.makeText(this, "No se pudo iniciar sesión", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    public Context getContext()
+    {
+        return this;
     }
 }

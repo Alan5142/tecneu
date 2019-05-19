@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Tecneu</string>
-    <string name="api_url">http://192.168.100.3:3000/api</string>
+    <string name="api_url">http://192.168.100.8:3000/api</string>
 
     <string name="login_username">Nombre de usuario</string>
     <string name="login_password">Contraseña</string>
@@ -21,8 +21,10 @@
     <string name="nav_start">Inicio</string>
     <string name="nav_orders">Pedidos</string>
     <string name="nav_stock">Stock</string>
-    <string name="nav_create_user">Crear usuario</string>
+    <string name="nav_users">Usuarios</string>
     <string name="nav_environment">Ambiente</string>
+    <string name="nav_products">Productos</string>
+    <string name="nav_providers">Proveedores</string>
     <string name="nav_settings">Ajustes</string>
     <string name="nav_close_session_btn">Cerrar sesión</string>
 
@@ -37,6 +39,8 @@
     <string name="cuser_fragment_repeat_password">Repita la contraseña</string>
     <string name="cuser_fragment_password">Contraseña</string>
     <string name="cuser_fragment_user_name">Nombre de usuario</string>
+
+    <string name="muser_fragment_modify_user">Modificar usuario</string>
 
     <string name="ambient_fragment_humidity">Humedad</string>
     <string name="ambient_fragment_temperature">Temperatura</string>
@@ -59,4 +63,10 @@
     <string name="fragment_create_order_product_add_btn">Añadir</string>
     <string name="fragment_create_order_product_info">Información del producto</string>
     <string name="fragment_create_order_order_create_btn">Crear pedido</string>
+    <string name="action_create_user">Crear usuario</string>
+    <string name="cprovider_fragment_provider_name">Nombre</string>
+    <string name="cprovider_fragment_company">Compañia</string>
+    <string name="cprovider_fragment_email">Email</string>
+    <string name="cprovider_fragment_phone">Tel</string>
+    <string name="cprovider_fragment_create_provider">Crear proveedor</string>
 </resources>

@@ -3,6 +3,7 @@
         "module": "commonjs",
         "sourceMap": true,
         "watch": true,
+        "inlineSources": true,
         "resolveJsonModule": true,
         "target": "es2015"
     }

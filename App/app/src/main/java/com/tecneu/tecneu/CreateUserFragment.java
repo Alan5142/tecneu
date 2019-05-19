@@ -3,10 +3,23 @@ package com.tecneu.tecneu;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.tecneu.tecneu.services.OnRequest;
+import com.tecneu.tecneu.services.UserService;
+
+import org.json.JSONException;
 
 
 /**
@@ -49,6 +62,61 @@ public class CreateUserFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_create_user, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        EditText username = view.findViewById(R.id.fragment_create_user_username);
+        EditText password = view.findViewById(R.id.fragment_create_user_password);
+        EditText repeatPassword = view.findViewById(R.id.fragment_create_user_repeat_password);
+        TextView text = view.findViewById(R.id.textView2);
+        RadioGroup permissions = view.findViewById(R.id.fragment_create_user_permissions);
+        if (UserService.getUserType(getContext()).equals("admin")) {
+            permissions.setVisibility(View.GONE);
+            text.setVisibility(View.GONE);
+        }
+        Button create = view.findViewById(R.id.fragment_create_user_create_btn);
+
+        create.setOnClickListener((View v) -> {
+            if (!password.getText().toString().equals(repeatPassword.getText().toString())) {
+                Toast.makeText(getContext(), "Las contraseñas no coinciden", Toast.LENGTH_SHORT)
+                        .show();
+                return;
+            }
+            String userType;
+            switch (permissions.getCheckedRadioButtonId()) {
+                case R.id.fragment_create_user_permissions_admin:
+                    userType = "admin";
+                    break;
+                default:
+                    userType = "estandar";
+            }
+            try {
+                UserService
+                        .createUser(getContext(),
+                                username.getText().toString(),
+                                password.getText().toString(),
+                                userType,
+                                new OnRequest() {
+                                    @Override
+                                    public void onSuccess(Object result) {
+                                        Toast.makeText(getContext(), "Creado con exito", Toast.LENGTH_SHORT)
+                                                .show();
+                                    }
+
+                                    @Override
+                                    public void onError() {
+                                        Toast.makeText(getContext(), "No se pudo crear", Toast.LENGTH_SHORT)
+                                                .show();
+                                    }
+                                });
+            } catch (JSONException e) {
+                Toast.makeText(getContext(), "No se pudo crear el usuario", Toast.LENGTH_SHORT)
+                        .show();
+            }
+        });
     }
 
     // TODO: Rename method, update argument and hook method into UI event

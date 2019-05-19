@@ -32,7 +32,7 @@ public class CreateOrder extends Fragment {
      */
     // TODO: Rename and change types and number of parameters
     public static CreateOrder newInstance() {
-        CreateOrder fragment = new CreateOrder();
+        CreateOrder fragment = new CreateOrder(); // hey! :D
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;

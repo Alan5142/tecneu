@@ -1,18 +1,11 @@
 package com.tecneu.tecneu;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -22,7 +15,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.tecneu.tecneu.Orders.CreateOrder;
+import com.tecneu.tecneu.Orders.MainOrdersFragment;
+import com.tecneu.tecneu.Orders.ViewOrdersFragment;
+import com.tecneu.tecneu.Providers.CreateProviderFragment;
+import com.tecneu.tecneu.Providers.ProviderFragment;
+import com.tecneu.tecneu.Users.CreateUserFragment;
+import com.tecneu.tecneu.Users.ViewUserFragment;
 import com.tecneu.tecneu.dummy.DummyContent;
+import com.tecneu.tecneu.models.User;
 import com.tecneu.tecneu.services.UserService;
 
 public class MainScreenActivity extends AppCompatActivity
@@ -31,9 +32,13 @@ public class MainScreenActivity extends AppCompatActivity
         AmbientFragment.OnFragmentInteractionListener,
         MainOrdersFragment.OnFragmentInteractionListener,
         ViewOrdersFragment.OnListFragmentInteractionListener,
-        CreateOrder.OnFragmentInteractionListener {
+        CreateOrder.OnFragmentInteractionListener,
+        ViewUserFragment.OnListFragmentInteractionListener,
+        ProviderFragment.OnListFragmentInteractionListener,
+        CreateProviderFragment.OnFragmentInteractionListener {
 
     DrawerLayout _drawer;
+    NavigationView navigationView;
     Toolbar _toolbar;
 
     @Override
@@ -49,7 +54,7 @@ public class MainScreenActivity extends AppCompatActivity
         _drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getHeaderView(0).findViewById(R.id.nav_header_close_session).setOnClickListener(v -> {
             UserService.closeSession(this);
@@ -57,6 +62,27 @@ public class MainScreenActivity extends AppCompatActivity
             finish();
             startActivity(intent);
         });
+
+
+        String type = UserService.getUserType(this);
+        if (type.equals("estandar")) {
+            showStandardNav();
+        } else {
+            showAdminNav();
+        }
+
+    }
+
+    private void showStandardNav() {
+        Menu nav_Menu = navigationView.getMenu();
+        nav_Menu.findItem(R.id.nav_products).setVisible(false);
+        nav_Menu.findItem(R.id.nav_providers).setVisible(false);
+        nav_Menu.findItem(R.id.nav_users).setVisible(false);
+    }
+
+    private void showAdminNav() {
+        Menu nav_Menu = navigationView.getMenu();
+        nav_Menu.findItem(R.id.nav_stock).setVisible(false);
     }
 
     @Override
@@ -103,8 +129,11 @@ public class MainScreenActivity extends AppCompatActivity
                 break;
             case R.id.nav_stock:
                 break;
-            case R.id.nav_create_user:
-                fragment = CreateUserFragment.newInstance();
+            case R.id.nav_providers:
+                fragment = ProviderFragment.newInstance();
+                break;
+            case R.id.nav_users:
+                fragment = ViewUserFragment.newInstance(1);
                 break;
             case R.id.nav_environment:
                 fragment = AmbientFragment.newInstance();
@@ -132,6 +161,11 @@ public class MainScreenActivity extends AppCompatActivity
 
     @Override
     public void onListFragmentInteraction(DummyContent.DummyItem item) {
+
+    }
+
+    @Override
+    public void onListFragmentInteraction(User item) {
 
     }
 }

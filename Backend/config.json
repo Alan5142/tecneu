@@ -6,5 +6,7 @@
         "name": "tecneu"
     },
     "listenAddress": "0.0.0.0",
-    "listenPort": "3000"
+    "listenPort": "3000",
+    "storeId": "250734247",
+    "jwtSecret": "a0006e1bb84f3402b262bd28af7add838c1c3b2dfe409584258959911704964b859b410b02a5d765985c4c5b431e6298"
 }

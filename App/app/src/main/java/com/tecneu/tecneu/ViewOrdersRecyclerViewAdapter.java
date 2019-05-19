@@ -8,7 +8,7 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
 
-import com.tecneu.tecneu.ViewOrdersFragment.OnListFragmentInteractionListener;
+import com.tecneu.tecneu.Orders.ViewOrdersFragment.OnListFragmentInteractionListener;
 import com.tecneu.tecneu.dummy.DummyContent.DummyItem;
 
 import java.util.ArrayList;
