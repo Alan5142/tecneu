@@ -27,7 +27,7 @@ import java.util.Map;
 
 public class ProviderService
 {
-    public static void createProvider(Context context, String company, String name, String email, BigInteger phoneNumber, OnRequest onRequest) throws JSONException {
+    public static void createProvider(Context context, String company, String name, String email, long phoneNumber, OnRequest onRequest) throws JSONException {
         RequestQueue queue = Volley.newRequestQueue(context);
         String url = context.getString(R.string.api_url) + "/providers";
 
@@ -70,6 +70,28 @@ public class ProviderService
                 headers.put("Authorization", "Bearer " + UserService.getToken(context));
                 return headers;
             }
+        };
+        queue.add(jsObjRequest);
+    }
+
+    public static void modifyProvider(Context context, Provider provider, OnRequest onRequest) throws JSONException {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        RequestQueue queue = Volley.newRequestQueue(context);
+        String url = context.getString(R.string.api_url) + "/providers/" + provider.id;
+        Gson gson = new Gson();
+        JSONObject object = new JSONObject(gson.toJson(provider));
+
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.PUT, url, object,
+                response -> onRequest.onSuccess(null),
+                error -> onRequest.onError()) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Content-Type", "application/json");
+                headers.put("Authorization", "Bearer " + UserService.getToken(context));
+                return headers;
+            }
+
         };
         queue.add(jsObjRequest);
     }

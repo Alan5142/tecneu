@@ -3,12 +3,30 @@ package com.tecneu.tecneu.Providers;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RadioGroup;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.tecneu.tecneu.R;
+import com.tecneu.tecneu.Users.ModifyUserFragment;
+import com.tecneu.tecneu.models.Provider;
+import com.tecneu.tecneu.models.User;
+import com.tecneu.tecneu.services.OnRequest;
+import com.tecneu.tecneu.services.ProviderService;
+import com.tecneu.tecneu.services.UserService;
+
+import org.json.JSONException;
+
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,10 +43,9 @@ public class ModifyProviderFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private Provider providerToEdit;
 
-    private OnFragmentInteractionListener mListener;
+    private ModifyProviderFragment.OnFragmentInteractionListener mListener;
 
     public ModifyProviderFragment() {
         // Required empty public constructor
@@ -38,16 +55,13 @@ public class ModifyProviderFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ModifyProviderFragment.
+     * @return A new instance of fragment ModifyUserFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static ModifyProviderFragment newInstance(String param1, String param2) {
+    public static ModifyProviderFragment newInstance(Provider provider) {
         ModifyProviderFragment fragment = new ModifyProviderFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_PARAM1, new Gson().toJson(provider));
         fragment.setArguments(args);
         return fragment;
     }
@@ -56,8 +70,8 @@ public class ModifyProviderFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            String json = getArguments().getString(ARG_PARAM1);
+            providerToEdit = new Gson().fromJson(json, Provider.class);
         }
     }
 
@@ -68,22 +82,51 @@ public class ModifyProviderFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_modify_provider, container, false);
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        EditText personName = view.findViewById(R.id.fragment_modify_provider_name);
+        personName.setText(providerToEdit.personName);
+        EditText companyName = view.findViewById(R.id.fragment_modify_provider_company);
+        companyName.setText(providerToEdit.companyName);
+        EditText email = view.findViewById(R.id.fragment_modify_provider_email);
+        email.setText(providerToEdit.email);
+        EditText phone = view.findViewById(R.id.fragment_modify_provider_phone);
+        phone.setText(providerToEdit.phoneNumber);
+        Button button = view.findViewById(R.id.fragment_modify_provider_modify_btn);
+        button.setOnClickListener(v -> {
+            providerToEdit.personName = personName.getText().toString();
+            providerToEdit.companyName = companyName.getText().toString();
+            providerToEdit.email = email.getText().toString();
+            providerToEdit.phoneNumber = phone.getText().toString();
+
+            try {
+                ProviderService.modifyProvider(getContext(), providerToEdit, new OnRequest() {
+                    @Override
+                    public void onSuccess(Object result) {
+                        Toast.makeText(getContext(), "Modificado con exito", Toast.LENGTH_SHORT).show();
+                        Objects.requireNonNull(getActivity())
+                                .getSupportFragmentManager()
+                                .popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                    }
+
+                    @Override
+                    public void onError() {
+                        Toast.makeText(getContext(), "No se pudo editar", Toast.LENGTH_SHORT).show();
+                        Objects.requireNonNull(getActivity())
+                                .getSupportFragmentManager()
+                                .popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                    }
+                });
+            } catch (JSONException e) {
+                Toast.makeText(getContext(), "No se pudo editar", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
     }
 
     @Override

@@ -26,6 +26,8 @@ import com.tecneu.tecneu.dummy.DummyContent;
 import com.tecneu.tecneu.models.User;
 import com.tecneu.tecneu.services.UserService;
 
+import java.util.Objects;
+
 public class MainScreenActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         CreateUserFragment.OnFragmentInteractionListener,
@@ -44,6 +46,7 @@ public class MainScreenActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        HttpsTrustManager.allowAllSSL();
         setContentView(R.layout.activity_main_screen);
         Toolbar _toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(_toolbar);
@@ -120,7 +123,8 @@ public class MainScreenActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         Fragment fragment = null;
-        getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        Fragment f = getSupportFragmentManager().findFragmentById(R.id.fragment);
+        // getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         switch (item.getItemId()) {
             case R.id.nav_start:
                 break;

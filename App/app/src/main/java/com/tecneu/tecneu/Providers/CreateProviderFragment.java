@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,6 +27,7 @@ import com.tecneu.tecneu.services.UserService;
 import org.json.JSONException;
 
 import java.math.BigInteger;
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -85,21 +87,27 @@ public class CreateProviderFragment extends Fragment {
                                 company.getText().toString(),
                                 name.getText().toString(),
                                 email.getText().toString(),
-                                new BigInteger(phone.getText().toString()),
+                                Long.parseLong(phone.getText().toString()),
                                 new OnRequest() {
                                     @Override
                                     public void onSuccess(Object result) {
                                         Toast.makeText(getContext(), "Creado con exito", Toast.LENGTH_SHORT)
                                                 .show();
+                                        Objects.requireNonNull(getActivity())
+                                                .getSupportFragmentManager()
+                                                .popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                                     }
 
                                     @Override
                                     public void onError() {
                                         Toast.makeText(getContext(), "No se pudo crear", Toast.LENGTH_SHORT)
                                                 .show();
+                                        Objects.requireNonNull(getActivity())
+                                                .getSupportFragmentManager()
+                                                .popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                                     }
                                 });
-            } catch (JSONException e) {
+            } catch (Exception e) {
                 Toast.makeText(getContext(), "No se pudo crear el proveedor", Toast.LENGTH_SHORT)
                         .show();
             }

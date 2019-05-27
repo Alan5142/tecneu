@@ -6,11 +6,34 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SeekBar;
 import android.widget.TextView;
+
+import com.github.nkzawa.emitter.Emitter;
+import com.github.nkzawa.socketio.client.IO;
+import com.github.nkzawa.socketio.client.Socket;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.net.URISyntaxException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+import javax.security.cert.CertificateException;
 
 
 /**
@@ -23,6 +46,52 @@ import android.widget.TextView;
  */
 public class AmbientFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
+    private Socket mSocket;
+
+    private final TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
+        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+            return new java.security.cert.X509Certificate[]{};
+        }
+
+        public void checkClientTrusted(X509Certificate[] chain,
+                                       String authType) {
+        }
+
+        public void checkServerTrusted(X509Certificate[] chain,
+                                       String authType) {
+        }
+    }};
+
+    {
+        IO.Options options = new IO.Options();
+        try {
+            SSLContext mySSLContext = SSLContext.getInstance("TLS");
+            mySSLContext.init(null, trustAllCerts, null);
+            IO.setDefaultSSLContext(SSLContext.getDefault());
+
+            // Set default hostname
+            HostnameVerifier hostnameVerifier = new HostnameVerifier() {
+                @Override
+                public boolean verify(String hostname, SSLSession session) {
+                    return true;
+                }
+            };
+            IO.setDefaultHostnameVerifier(hostnameVerifier);
+
+            // set as an option
+            options.sslContext = SSLContext.getDefault();
+            options.sslContext = mySSLContext;
+            options.hostnameVerifier = hostnameVerifier;
+            options.secure = true;
+            options.port = 3000;
+            mSocket = IO.socket("https://192.168.100.8:3000", options);
+        } catch (URISyntaxException e) {
+            Log.d(AmbientFragment.class.getName(), "No se pudo establecer la comunicación con socketio");
+        } catch (NoSuchAlgorithmException ignored) {
+        } catch (KeyManagementException e) {
+            e.printStackTrace();
+        }
+    }
 
     public AmbientFragment() {
         // Required empty public constructor
@@ -44,6 +113,7 @@ public class AmbientFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_ambient, container, false);
     }
@@ -51,24 +121,22 @@ public class AmbientFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        SeekBar seekBar = view.findViewById(R.id.ambient_fragment_optim_temp_edit);
-        TextView textView = view.findViewById(R.id.create_fragment_show_temp);
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                textView.setText("Temperatura: " + progress + "°C");
+        TextView temperature = view.findViewById(R.id.ambient_fragment_temperature);
+        TextView humidity = view.findViewById(R.id.ambient_fragment_humidity);
+        TextView gas = view.findViewById(R.id.ambient_fragment_gas);
+
+        mSocket.on("receiveData", args -> getActivity().runOnUiThread(() -> {
+            JSONObject object = (JSONObject) args[0];
+            try {
+                temperature.setText(object.getString("temp") + "°C");
+                humidity.setText(object.getString("humidity") + "%");
+                gas.setText(object.getString("gas"));
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
+        }));
 
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
+        mSocket.connect();
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -93,6 +161,7 @@ public class AmbientFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        mSocket.disconnect();
     }
 
     /**

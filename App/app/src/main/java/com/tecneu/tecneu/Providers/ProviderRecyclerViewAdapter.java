@@ -77,7 +77,7 @@ public class ProviderRecyclerViewAdapter extends RecyclerView.Adapter<ProviderRe
                 mActivity
                         .getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.fragment, CreateProviderFragment.newInstance())
+                        .replace(R.id.fragment, ModifyProviderFragment.newInstance(holder.mItem))
                         .commit();
             });
             alert.setNegativeButton("Cancelar", null);
@@ -124,8 +124,9 @@ public class ProviderRecyclerViewAdapter extends RecyclerView.Adapter<ProviderRe
         }
 
         @Override
+        @NonNull
         public String toString() {
-            return super.toString();
+            return super.toString() + " '" + personName.getText() + "'";
         }
     }
 }

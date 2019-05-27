@@ -16,10 +16,15 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.tecneu.tecneu.Providers.CreateProviderFragment;
+import com.tecneu.tecneu.Providers.ProviderFragment;
+import com.tecneu.tecneu.Users.ViewUserFragment;
 import com.tecneu.tecneu.services.OnRequest;
 import com.tecneu.tecneu.services.UserService;
 
 import org.json.JSONException;
+
+import java.util.Objects;
 
 
 /**
@@ -104,12 +109,21 @@ public class CreateUserFragment extends Fragment {
                                     public void onSuccess(Object result) {
                                         Toast.makeText(getContext(), "Creado con exito", Toast.LENGTH_SHORT)
                                                 .show();
+                                        getFragmentManager()
+                                                .beginTransaction()
+                                                .replace(R.id.fragment, ViewUserFragment.newInstance(1))
+                                                .commit();
                                     }
 
                                     @Override
                                     public void onError() {
                                         Toast.makeText(getContext(), "No se pudo crear", Toast.LENGTH_SHORT)
                                                 .show();
+                                        Objects.requireNonNull(getActivity())
+                                                .getSupportFragmentManager()
+                                                .beginTransaction()
+                                                .replace(R.id.fragment, ViewUserFragment.newInstance(1))
+                                                .commit();
                                     }
                                 });
             } catch (JSONException e) {

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,8 @@ import com.tecneu.tecneu.services.OnRequest;
 import com.tecneu.tecneu.services.UserService;
 
 import org.json.JSONException;
+
+import java.util.Objects;
 
 
 /**
@@ -104,12 +107,18 @@ public class CreateUserFragment extends Fragment {
                                     public void onSuccess(Object result) {
                                         Toast.makeText(getContext(), "Creado con exito", Toast.LENGTH_SHORT)
                                                 .show();
+                                        Objects.requireNonNull(getActivity())
+                                                .getSupportFragmentManager()
+                                                .popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                                     }
 
                                     @Override
                                     public void onError() {
                                         Toast.makeText(getContext(), "No se pudo crear", Toast.LENGTH_SHORT)
                                                 .show();
+                                        Objects.requireNonNull(getActivity())
+                                                .getSupportFragmentManager()
+                                                .popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                                     }
                                 });
             } catch (JSONException e) {
