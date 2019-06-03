@@ -70,7 +70,7 @@ module Route {
                                 return;
                             }
                             res.status(200);
-                            res.send();
+                            res.send({});
                             return;
                         });
         }

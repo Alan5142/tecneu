@@ -1,14 +1,31 @@
 package com.tecneu.tecneu.Orders;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import com.tecneu.tecneu.R;
+import com.tecneu.tecneu.models.Provider;
+import com.tecneu.tecneu.services.OnRequest;
+import com.tecneu.tecneu.services.ProviderService;
+
+import java.util.ArrayList;
 
 
 /**
@@ -50,6 +67,67 @@ public class CreateOrder extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_create_order, container, false);
+    }
+
+
+    private Integer idProvider = null;
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        EditText providerName = view.findViewById(R.id.fragment_create_order_provider_search);
+        ListView orderInformation = view.findViewById(R.id.fragment_create_order_order_details);
+        Button searchProviderButton = view.findViewById(R.id.fragment_create_order_provider_search_btn);
+        Button addToOrderButton = view.findViewById(R.id.fragment_create_order_product_add_btn);
+        EditText productName = view.findViewById(R.id.fragment_create_order_product_search);
+        EditText productQuantity = view.findViewById(R.id.fragment_create_order_product_quantity);
+        searchProviderButton.setOnClickListener(v -> {
+            AlertDialog.Builder builderSingle = new AlertDialog.Builder(getContext());
+            builderSingle.setTitle("Elige proveedor:-");
+            ProviderService.getAllProviders(getContext(), new OnRequest() {
+                @Override
+                public void onSuccess(Object result) {
+                    ArrayList<Provider> providers = (ArrayList<Provider>) result;
+                    final ArrayAdapter<String> providersAdapter = new ArrayAdapter<>(getContext(), android.R.layout.select_dialog_singlechoice);
+                    for (Provider p : providers) {
+                        providersAdapter.add(p.companyName);
+                    }
+                    builderSingle.setNegativeButton("CANCELAR", (dialog, which) -> dialog.dismiss());
+
+                    builderSingle.setAdapter(providersAdapter, (dialog, which) -> {
+                        providerName.setText(providers.get(which).companyName);
+                        idProvider = which;
+                    });
+                    builderSingle.show();
+                }
+
+                @Override
+                public void onError() {
+                }
+            });
+        });
+        addToOrderButton.setOnClickListener(v -> {
+            try {
+                int quantity = Integer.parseInt(productQuantity.getText().toString());
+                if (quantity == 0) {
+                    Toast.makeText(getContext(), "La cantidad no peude ser 0", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (productName.getText().toString().isEmpty()) {
+                    Toast.makeText(getContext(), "El producto no puede estar vacio", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                ListAdapter adapter = orderInformation.getAdapter();
+                if (adapter == null) {
+                    adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1);
+                }
+                ArrayAdapter<String> adapterString = (ArrayAdapter<String>) adapter;
+                adapterString.add(productName.getText().toString() + ", " + providerName.getText().toString() + ", " + quantity);
+                orderInformation.setAdapter(adapter);
+            } catch(Exception e) {
+                Log.e("", e.getMessage());
+                Toast.makeText(getContext(), "No se pudo agregar", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     // TODO: Rename method, update argument and hook method into UI event

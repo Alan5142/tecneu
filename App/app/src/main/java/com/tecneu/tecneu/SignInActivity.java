@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,6 +14,17 @@ import com.tecneu.tecneu.services.OnRequest;
 import com.tecneu.tecneu.services.UserService;
 
 import org.json.JSONException;
+
+import java.net.URISyntaxException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 
 public class SignInActivity extends AppCompatActivity {
@@ -25,7 +37,7 @@ public class SignInActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        HttpsTrustManager.allowAllSSL();
+        NukeSSLCerts.nuke();
         setContentView(R.layout.activity_sign_in);
         _usernameText = findViewById(R.id.login_username);
         _passwordText = findViewById(R.id.login_password);

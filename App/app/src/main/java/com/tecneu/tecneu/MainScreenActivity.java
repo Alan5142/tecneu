@@ -46,7 +46,6 @@ public class MainScreenActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        HttpsTrustManager.allowAllSSL();
         setContentView(R.layout.activity_main_screen);
         Toolbar _toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(_toolbar);

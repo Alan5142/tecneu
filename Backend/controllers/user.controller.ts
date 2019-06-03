@@ -5,12 +5,10 @@ import * as jwt from 'jsonwebtoken';
 import * as config from '../config.json';
 import * as expressJwt from 'express-jwt'
 import {fromHeaderOrQuerystring} from "../jwt-utilty";
+import {io} from "../sensors";
 
 module Route {
     export class UserController {
-        constructor() {
-        }
-
         get routes(): express.Router {
             const router = express.Router();
             router.get('/:id', this.getUserWithId.bind(this.getUserWithId));
@@ -51,7 +49,7 @@ module Route {
             database.connection.query('SELECT * from user where idUser = ?', [req.params.id], (err, result: Array<any>) => {
                 if (err || result.length !== 1) {
                     res.status(404);
-                    res.send();
+                    res.send({});
                     return;
                 }
                 res.status(200);
@@ -69,7 +67,7 @@ module Route {
             const body = req.body;
             if (!body.password || !body.username || !body.userType) {
                 res.status(400);
-                res.send();
+                res.send({});
                 return;
             }
 
@@ -77,7 +75,7 @@ module Route {
             database.connection.query(`SELECT * from user_type WHERE name = ?`, [body.userType], (err, result: Array<any>) => {
                 if (err || result.length !== 1) {
                     res.status(400);
-                    res.send();
+                    res.send({});
                     return;
                 }
 
@@ -101,6 +99,7 @@ module Route {
                             }
                             res.status(200);
                             res.send({});
+                            io.emit('registerFingerprint', {userId: result.insertedId});
                             return;
                         });
                     });

@@ -19,7 +19,7 @@
             android:layout_weight="1"
             android:ems="10"
             android:hint="@string/fragment_create_order_provider_search"
-            android:inputType="textPersonName" />
+            android:inputType="none" />
 
         <Button
             android:id="@+id/fragment_create_order_provider_search_btn"
@@ -46,6 +46,7 @@
             android:id="@+id/fragment_create_order_product_search_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="invisible"
             android:text="@string/fragment_create_order_search_btn" />
 
     </LinearLayout>
@@ -67,7 +68,7 @@
             android:layout_weight="0.9"
             android:ems="10"
             android:hint="@string/fragment_create_order_product_quantity"
-            android:inputType="textPersonName" />
+            android:inputType="numberDecimal" />
 
         <Button
             android:layout_weight="0.1"
@@ -80,7 +81,7 @@
     <ListView
         android:id="@+id/fragment_create_order_order_details"
         android:layout_width="match_parent"
-        android:layout_height="300dp">
+        android:layout_height="200dp">
 
     </ListView>
 
