@@ -70,4 +70,16 @@
     <string name="cprovider_fragment_email">Email</string>
     <string name="cprovider_fragment_phone">Tel</string>
     <string name="cprovider_fragment_create_provider">Crear proveedor</string>
+    <string name="fragment_main_title">Bienvenido a Tecneu</string>
+    <string name="fragment_main_description">Tecneu es un sitio de venta de componentes electronicos ubicado en la ciudad de Guadalajara, Jalisco México</string>
+
+
+    <string name="settings_fragment_title">Opciones</string>
+    <string name="settings_fragment_meli">Vincular con mercado libre</string>
+    <string name="fragment_product_title">Titulo: </string>
+    <string name="fragment_product_price">precio: </string>
+    <string name="fragment_product_available_quantity">cantidad disponible: </string>
+
+    <string name="meli_app_id">4722663666555154</string>
+    <string name="meli_redirect_uri">https://localhost:3000/api/meli/redirect</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.tecneu.tecneu;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,7 +15,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import com.mercadolibre.android.sdk.Meli;
 import com.tecneu.tecneu.Orders.CreateOrder;
 import com.tecneu.tecneu.Orders.MainOrdersFragment;
 import com.tecneu.tecneu.Orders.ViewOrdersFragment;
@@ -23,6 +26,7 @@ import com.tecneu.tecneu.Providers.ProviderFragment;
 import com.tecneu.tecneu.Users.CreateUserFragment;
 import com.tecneu.tecneu.Users.ViewUserFragment;
 import com.tecneu.tecneu.dummy.DummyContent;
+import com.tecneu.tecneu.models.Product;
 import com.tecneu.tecneu.models.User;
 import com.tecneu.tecneu.services.UserService;
 
@@ -37,7 +41,10 @@ public class MainScreenActivity extends AppCompatActivity
         CreateOrder.OnFragmentInteractionListener,
         ViewUserFragment.OnListFragmentInteractionListener,
         ProviderFragment.OnListFragmentInteractionListener,
-        CreateProviderFragment.OnFragmentInteractionListener {
+        CreateProviderFragment.OnFragmentInteractionListener,
+        MainScreenFragment.OnFragmentInteractionListener,
+        SettingsFragment.OnFragmentInteractionListener,
+        ProductFragment.OnListFragmentInteractionListener {
 
     DrawerLayout _drawer;
     NavigationView navigationView;
@@ -46,6 +53,7 @@ public class MainScreenActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Meli.initializeSDK(this);
         setContentView(R.layout.activity_main_screen);
         Toolbar _toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(_toolbar);
@@ -72,6 +80,11 @@ public class MainScreenActivity extends AppCompatActivity
         } else {
             showAdminNav();
         }
+
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment, MainScreenFragment.newInstance())
+                .commit();
 
     }
 
@@ -126,11 +139,13 @@ public class MainScreenActivity extends AppCompatActivity
         // getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         switch (item.getItemId()) {
             case R.id.nav_start:
+                fragment = MainScreenFragment.newInstance();
                 break;
             case R.id.nav_orders:
                 fragment = ViewOrdersFragment.newInstance();
                 break;
-            case R.id.nav_stock:
+            case R.id.nav_products:
+                fragment = ProductFragment.newInstance();
                 break;
             case R.id.nav_providers:
                 fragment = ProviderFragment.newInstance();
@@ -142,6 +157,7 @@ public class MainScreenActivity extends AppCompatActivity
                 fragment = AmbientFragment.newInstance();
                 break;
             case R.id.nav_settings:
+                fragment = SettingsFragment.newInstance();
                 break;
             default:
                 break;
@@ -169,6 +185,19 @@ public class MainScreenActivity extends AppCompatActivity
 
     @Override
     public void onListFragmentInteraction(User item) {
+
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 300) {
+            if (resultCode == Activity.RESULT_OK) {
+                Toast.makeText(this, "Conectado con exito", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @Override
+    public void onListFragmentInteraction(Product item) {
 
     }
 }

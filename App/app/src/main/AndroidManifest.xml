@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.tecneu.tecneu">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -12,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:hardwareAccelerated="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
         <activity
             android:name=".MainScreenActivity"
             android:label="@string/title_activity_main_screen"
@@ -24,6 +26,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.mercadolibre.android.sdk.MercadoLibreActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <meta-data
+            android:name="com.mercadolibre.android.sdk.ApplicationId"
+            android:value="@string/meli_app_id" />
+
+        <meta-data
+            android:name="com.mercadolibre.android.sdk.RedirectUrl"
+            android:value="@string/meli_redirect_uri" />
     </application>
+
 
 </manifest>
