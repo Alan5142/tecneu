@@ -125,14 +125,20 @@ public class ModifyProviderFragment extends Fragment {
                 return;
             }
 
+            if (providerToEdit.phoneNumber.length() != 11) {
+                Toast.makeText(getContext(), "El teléfono debe ser de 11 digitos", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             try {
                 ProviderService.modifyProvider(getContext(), providerToEdit, new OnRequest() {
                     @Override
                     public void onSuccess(Object result) {
                         Toast.makeText(getContext(), "Modificado con exito", Toast.LENGTH_SHORT).show();
-                        Objects.requireNonNull(getActivity())
-                                .getSupportFragmentManager()
-                                .popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                        getActivity().getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.fragment, ProviderFragment.newInstance())
+                                .commit();
                     }
 
                     @Override

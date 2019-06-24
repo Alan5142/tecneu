@@ -104,6 +104,11 @@ public class CreateProviderFragment extends Fragment {
                 Toast.makeText(getContext(), "El email no es valido", Toast.LENGTH_SHORT).show();
                 return;
             }
+
+            if (phone.getText().toString().length() != 11) {
+                Toast.makeText(getContext(), "El numero debe ser de 11 digitos", Toast.LENGTH_SHORT).show();
+                return;
+            }
             try {
                 ProviderService
                         .createProvider(getContext(),

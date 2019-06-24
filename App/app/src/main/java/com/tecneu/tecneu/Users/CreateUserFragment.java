@@ -113,6 +113,7 @@ public class CreateUserFragment extends Fragment {
                     break;
                 case R.id.fragment_create_user_permissions_standard:
                     userType = "estandar";
+                    break;
                 default:
                     Toast.makeText(getContext(), "Llena el permiso", Toast.LENGTH_SHORT).show();
                     return;

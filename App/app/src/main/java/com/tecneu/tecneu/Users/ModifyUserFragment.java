@@ -129,17 +129,19 @@ public class ModifyUserFragment extends Fragment {
                     @Override
                     public void onSuccess(Object result) {
                         Toast.makeText(getContext(), "Modificado con exito", Toast.LENGTH_SHORT).show();
-                        Objects.requireNonNull(getActivity())
-                                .getSupportFragmentManager()
-                                .popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                        getActivity().getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.fragment, ViewUserFragment.newInstance(1))
+                                .commit();
                     }
 
                     @Override
                     public void onError() {
                         Toast.makeText(getContext(), "No se pudo editar", Toast.LENGTH_SHORT).show();
-                        Objects.requireNonNull(getActivity())
-                                .getSupportFragmentManager()
-                                .popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                        getActivity().getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.fragment, ViewUserFragment.newInstance(1))
+                                .commit();
                     }
                 });
             } catch (JSONException e) {
