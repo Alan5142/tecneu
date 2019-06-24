@@ -1,4 +1,4 @@
-package com.tecneu.tecneu;
+package com.tecneu.tecneu.Orders;
 
 import android.content.Context;
 import android.net.Uri;
@@ -10,27 +10,27 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
-import com.mercadolibre.android.sdk.AccessToken;
-import com.mercadolibre.android.sdk.Identity;
-import com.mercadolibre.android.sdk.Meli;
+import com.google.gson.Gson;
+import com.tecneu.tecneu.R;
+import com.tecneu.tecneu.models.Order;
+
+import java.util.Objects;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link SettingsFragment.OnFragmentInteractionListener} interface
+ * {@link ModifyOrdersFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link SettingsFragment#newInstance} factory method to
+ * Use the {@link ModifyOrdersFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SettingsFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-
+public class ModifyOrdersFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
+    private static final String ARG_PARAM1 = "param1";
 
-    public SettingsFragment() {
+    public ModifyOrdersFragment() {
         // Required empty public constructor
     }
 
@@ -38,12 +38,13 @@ public class SettingsFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @return A new instance of fragment SettingsFragment.
+     * @return A new instance of fragment ModifyOrdersFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static SettingsFragment newInstance() {
-        SettingsFragment fragment = new SettingsFragment();
+    public static ModifyOrdersFragment newInstance(Order order) {
+        ModifyOrdersFragment fragment = new ModifyOrdersFragment();
         Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, new Gson().toJson(order));
         fragment.setArguments(args);
         return fragment;
     }
@@ -51,32 +52,24 @@ public class SettingsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_settings, container, false);
+
+        return inflater.inflate(R.layout.fragment_main_orders, container, false);
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        Button meliButton = view.findViewById(R.id.fragment_settings_meli_btn);
-        meliButton.setOnClickListener(v -> {
-            Identity identity = Meli.getCurrentIdentity(getContext());
-            Meli.startLogin(getActivity(), 300);
-        });
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+    public void onViewCreated(@NonNull View view, @Nullable Bundle bundle) {
+        Button viewOrders = view.findViewById(R.id.fragment_main_orders_search_orders_btn);
+        Objects.requireNonNull(viewOrders).setOnClickListener((View v) -> Objects.requireNonNull(getActivity())
+                .getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment, ViewOrdersFragment.newInstance())
+                .commit());
     }
 
     @Override

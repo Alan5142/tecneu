@@ -72,6 +72,8 @@ public class CreateUserFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         EditText username = view.findViewById(R.id.fragment_create_user_username);
+        EditText name = view.findViewById(R.id.fragment_create_user_name);
+        EditText surname = view.findViewById(R.id.fragment_create_user_surname);
         EditText password = view.findViewById(R.id.fragment_create_user_password);
         EditText repeatPassword = view.findViewById(R.id.fragment_create_user_repeat_password);
         TextView text = view.findViewById(R.id.textView2);
@@ -88,6 +90,10 @@ public class CreateUserFragment extends Fragment {
                         .show();
                 return;
             }
+            if (username.getText().toString().isEmpty() || name.getText().toString().isEmpty() || surname.getText().toString().isEmpty()) {
+                Toast.makeText(getContext(), "Llena los campos", Toast.LENGTH_SHORT).show();
+                return;
+            }
             String userType;
             switch (permissions.getCheckedRadioButtonId()) {
                 case R.id.fragment_create_user_permissions_admin:
@@ -102,6 +108,8 @@ public class CreateUserFragment extends Fragment {
                                 username.getText().toString(),
                                 password.getText().toString(),
                                 userType,
+                                name.getText().toString(),
+                                surname.getText().toString(),
                                 new OnRequest() {
                                     @Override
                                     public void onSuccess(Object result) {

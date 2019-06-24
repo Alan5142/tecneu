@@ -81,6 +81,12 @@ public class CreateProviderFragment extends Fragment {
         Button create = view.findViewById(R.id.fragment_create_provider_create_btn);
 
         create.setOnClickListener((View v) -> {
+            if (name.getText().toString().isEmpty() || company.getText().toString().isEmpty() || email.getText().toString().isEmpty() ||
+                    !email.getText().toString().matches("/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/") ||
+                    phone.getText().toString().isEmpty()) {
+                Toast.makeText(getContext(), "Llena todos los campos", Toast.LENGTH_SHORT).show();
+                return;
+            }
             try {
                 ProviderService
                         .createProvider(getContext(),

@@ -19,8 +19,9 @@ import android.widget.Toast;
 
 import com.mercadolibre.android.sdk.Meli;
 import com.tecneu.tecneu.Orders.CreateOrder;
-import com.tecneu.tecneu.Orders.MainOrdersFragment;
+import com.tecneu.tecneu.Orders.ModifyOrdersFragment;
 import com.tecneu.tecneu.Orders.ViewOrdersFragment;
+import com.tecneu.tecneu.Products.ProductFragment;
 import com.tecneu.tecneu.Providers.CreateProviderFragment;
 import com.tecneu.tecneu.Providers.ProviderFragment;
 import com.tecneu.tecneu.Users.CreateUserFragment;
@@ -30,13 +31,11 @@ import com.tecneu.tecneu.models.Product;
 import com.tecneu.tecneu.models.User;
 import com.tecneu.tecneu.services.UserService;
 
-import java.util.Objects;
-
 public class MainScreenActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         CreateUserFragment.OnFragmentInteractionListener,
         AmbientFragment.OnFragmentInteractionListener,
-        MainOrdersFragment.OnFragmentInteractionListener,
+        ModifyOrdersFragment.OnFragmentInteractionListener,
         ViewOrdersFragment.OnListFragmentInteractionListener,
         CreateOrder.OnFragmentInteractionListener,
         ViewUserFragment.OnListFragmentInteractionListener,

@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:layout_height="130dp">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
     <ImageView
         android:id="@+id/fragment_product_image"
+        android:clickable="false"
         android:layout_width="100dp"
         android:layout_height="100dp" />
 
     <LinearLayout
+        android:clickable="false"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -61,3 +67,4 @@
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
+</android.support.v7.widget.CardView>

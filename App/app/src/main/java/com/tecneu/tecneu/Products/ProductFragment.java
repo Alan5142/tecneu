@@ -1,4 +1,4 @@
-package com.tecneu.tecneu;
+package com.tecneu.tecneu.Products;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -7,7 +7,6 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,8 +20,7 @@ import com.mercadolibre.android.sdk.ApiRequestListener;
 import com.mercadolibre.android.sdk.ApiResponse;
 import com.mercadolibre.android.sdk.Identity;
 import com.mercadolibre.android.sdk.Meli;
-import com.tecneu.tecneu.dummy.DummyContent;
-import com.tecneu.tecneu.dummy.DummyContent.DummyItem;
+import com.tecneu.tecneu.R;
 import com.tecneu.tecneu.models.Product;
 
 import java.util.ArrayList;

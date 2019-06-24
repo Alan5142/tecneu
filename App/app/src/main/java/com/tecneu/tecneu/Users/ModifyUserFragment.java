@@ -99,6 +99,12 @@ public class ModifyUserFragment extends Fragment {
             userToEdit.username = username.getText().toString();
             userToEdit.names = name.getText().toString();
             userToEdit.surnames = surname.getText().toString();
+
+            if (userToEdit.username.isEmpty() || userToEdit.names.isEmpty() || userToEdit.surnames.isEmpty()) {
+                Toast.makeText(getContext(), "Llena los campos", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             switch (radioGroup.getCheckedRadioButtonId()) {
                 case R.id.fragment_modify_user_permissions_admin:
                     userToEdit.userType = "admin";

@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Tecneu</string>
-    <string name="api_url">https://192.168.100.8:3000/api</string>
+    <string name="api_url">https://192.168.43.11:3000/api</string>
     <string name="socketio_url">https://192.168.100.8:3000/socket.io</string>
 
     <string name="login_username">Nombre de usuario</string>
@@ -82,4 +82,6 @@
 
     <string name="meli_app_id">4722663666555154</string>
     <string name="meli_redirect_uri">https://localhost:3000/api/meli/redirect</string>
+    <string name="cuser_fragment_user_person_name">Nombre de la persona</string>
+    <string name="cuser_fragment_user_surname">Apellidos</string>
 </resources>

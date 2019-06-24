@@ -100,6 +100,13 @@ public class ModifyProviderFragment extends Fragment {
             providerToEdit.email = email.getText().toString();
             providerToEdit.phoneNumber = phone.getText().toString();
 
+            if (providerToEdit.personName.isEmpty() || providerToEdit.companyName.isEmpty() || providerToEdit.email.isEmpty() ||
+                !providerToEdit.email.matches("/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/") ||
+                 providerToEdit.phoneNumber.isEmpty()) {
+                Toast.makeText(getContext(), "Llena los campos", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             try {
                 ProviderService.modifyProvider(getContext(), providerToEdit, new OnRequest() {
                     @Override

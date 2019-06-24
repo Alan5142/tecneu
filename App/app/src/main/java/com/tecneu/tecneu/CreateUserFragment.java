@@ -74,6 +74,8 @@ public class CreateUserFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         EditText username = view.findViewById(R.id.fragment_create_user_username);
+        EditText name = view.findViewById(R.id.fragment_create_user_name);
+        EditText surname = view.findViewById(R.id.fragment_create_user_surname);
         EditText password = view.findViewById(R.id.fragment_create_user_password);
         EditText repeatPassword = view.findViewById(R.id.fragment_create_user_repeat_password);
         TextView text = view.findViewById(R.id.textView2);
@@ -103,6 +105,8 @@ public class CreateUserFragment extends Fragment {
                         .createUser(getContext(),
                                 username.getText().toString(),
                                 password.getText().toString(),
+                                name.getText().toString(),
+                                surname.getText().toString(),
                                 userType,
                                 new OnRequest() {
                                     @Override

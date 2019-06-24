@@ -113,13 +113,15 @@ public class UserService {
         queue.add(jsObjRequest);
     }
 
-    public static void createUser(Context context, String username, String password, String userType, OnRequest onRequest) throws JSONException {
+    public static void createUser(Context context, String username, String password, String userType, String name, String surname, OnRequest onRequest) throws JSONException {
         RequestQueue queue = Volley.newRequestQueue(context);
         String url = context.getString(R.string.api_url) + "/users";
         JSONObject request = new JSONObject();
         request.put("username", username);
         request.put("password", password);
         request.put("userType", userType);
+        request.put("surnames", surname);
+        request.put("names", name);
 
         JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.POST, url, request,
                 response -> onRequest.onSuccess(null),

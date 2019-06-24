@@ -8,6 +8,7 @@ import * as https from 'https';
 import {ProviderController} from "./controllers/provider.controller";
 import * as fs from "fs";
 import {startConnection} from "./sensors";
+import ordersController = require('./controllers/orders.controller.js');
 
 const bodyParser = require('body-parser');
 
@@ -51,6 +52,7 @@ class Server {
         const apiRouter = express.Router();
         router.use('/users', new userController.UserController().routes);
         router.use('/providers', new providerController.ProviderController().routes);
+        router.use('/orders', new ordersController.OrdersController().routes);
         apiRouter.use('/api', router);
         this.app.use(apiRouter);
     }

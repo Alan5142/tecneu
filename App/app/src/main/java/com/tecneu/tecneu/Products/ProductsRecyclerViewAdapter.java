@@ -1,8 +1,7 @@
-package com.tecneu.tecneu;
+package com.tecneu.tecneu.Products;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,24 +12,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.mercadolibre.android.sdk.ApiRequestListener;
 import com.mercadolibre.android.sdk.ApiResponse;
 import com.mercadolibre.android.sdk.Meli;
 import com.squareup.picasso.Picasso;
-import com.tecneu.tecneu.ProductFragment.OnListFragmentInteractionListener;
+import com.tecneu.tecneu.Products.ProductFragment.OnListFragmentInteractionListener;
+import com.tecneu.tecneu.R;
 import com.tecneu.tecneu.dummy.DummyContent.DummyItem;
 import com.tecneu.tecneu.models.Product;
-import com.tecneu.tecneu.services.OnRequest;
-import com.tecneu.tecneu.services.ProductService;
 
-import org.json.JSONException;
-
-import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -119,51 +109,7 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
                                         Toast.makeText(activity, "No se pudo modificar el stock", Toast.LENGTH_SHORT).show();
                                         return;
                                     }
-                                    try {
-                                        ProductService.changeStock(activity.getApplicationContext(), mItem.id, Integer.parseInt(editText.getText().toString()), new OnRequest() {
-                                            @Override
-                                            public void onSuccess(Object result) {
-                                                Toast.makeText(activity, "Modificado con exito", Toast.LENGTH_SHORT).show();
-                                                Meli.asyncGet("/sites/MLM/search?seller_id=250734247", new ApiRequestListener() {
-                                                    @Override
-                                                    public void onRequestProcessed(int requestCode, ApiResponse response) {
-                                                        if (response.getContent() != null) {
-                                                            ArrayList<Product> products = new ArrayList<>();
-                                                            JsonObject json = new JsonParser().parse(response.getContent()).getAsJsonObject();
-                                                            JsonArray items = json.getAsJsonArray("results");
-                                                            for (JsonElement element : items) {
-                                                                JsonObject productObject = element.getAsJsonObject();
-                                                                Product product = new Product();
-                                                                product.currency = productObject.get("currency_id").getAsString();
-                                                                product.price = productObject.get("price").getAsBigDecimal();
-                                                                product.id = productObject.get("id").getAsString();
-                                                                product.title = productObject.get("title").getAsString();
-                                                                product.availableQuantity = productObject.get("available_quantity").getAsBigDecimal();
-                                                                product.image = productObject.get("thumbnail").getAsString();
-                                                                products.add(product);
-                                                            }
-                                                            ProductsRecyclerViewAdapter adapter = ProductsRecyclerViewAdapter.this;
-                                                            adapter.mValues = products;
-                                                            adapter.notifyDataSetChanged();
-                                                        }
-                                                    }
-
-                                                    @Override
-                                                    public void onRequestStarted(int requestCode) {
-
-                                                    }
-                                                });
-                                            }
-
-                                            @Override
-                                            public void onError() {
-                                                Toast.makeText(activity, "No se pudo modificar el stock", Toast.LENGTH_SHORT).show();
-
-                                            }
-                                        });
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
+                                    Toast.makeText(activity, "Modificado con exito", Toast.LENGTH_SHORT).show();
                                 }
 
                                 @Override

@@ -3,7 +3,10 @@ package com.tecneu.tecneu.Orders;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
@@ -13,10 +16,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.tecneu.tecneu.Providers.ProviderRecyclerViewAdapter;
 import com.tecneu.tecneu.R;
 import com.tecneu.tecneu.dummy.DummyContent;
 import com.tecneu.tecneu.dummy.DummyContent.DummyItem;
+import com.tecneu.tecneu.models.Order;
+import com.tecneu.tecneu.models.Provider;
+import com.tecneu.tecneu.services.OnRequest;
+import com.tecneu.tecneu.services.OrderService;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -62,10 +71,27 @@ public class ViewOrdersFragment extends Fragment {
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
-            recyclerView = (RecyclerView) view;
-            recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            recyclerViewAdapter = new ViewOrdersRecyclerViewAdapter(DummyContent.ITEMS, mListener);
-            recyclerView.setAdapter(recyclerViewAdapter);
+            RecyclerView recyclerView = (RecyclerView) view;
+            if (mColumnCount <= 1) {
+                recyclerView.setLayoutManager(new LinearLayoutManager(context));
+            } else {
+                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+            }
+            OrderService.getAllOrders(getContext(), new OnRequest() {
+                @Override
+                public void onSuccess(Object result) {
+                    LinearLayoutManager llm = new LinearLayoutManager(getContext());
+                    recyclerView.setLayoutManager(llm);
+                    recyclerView.setAdapter(new ViewOrdersRecyclerViewAdapter((List<Order>) result, mListener, (AppCompatActivity)getActivity()));
+                    DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getContext(), llm.getOrientation());
+                    recyclerView.addItemDecoration(dividerItemDecoration);
+                }
+
+                @Override
+                public void onError() {
+
+                }
+            });
         }
         return view;
     }
