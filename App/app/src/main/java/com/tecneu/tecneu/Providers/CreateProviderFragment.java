@@ -28,6 +28,8 @@ import org.json.JSONException;
 
 import java.math.BigInteger;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -81,10 +83,25 @@ public class CreateProviderFragment extends Fragment {
         Button create = view.findViewById(R.id.fragment_create_provider_create_btn);
 
         create.setOnClickListener((View v) -> {
-            if (name.getText().toString().isEmpty() || company.getText().toString().isEmpty() || email.getText().toString().isEmpty() ||
-                    !email.getText().toString().matches("/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/") ||
-                    phone.getText().toString().isEmpty()) {
-                Toast.makeText(getContext(), "Llena todos los campos", Toast.LENGTH_SHORT).show();
+            if (name.getText().toString().isEmpty()) {
+                Toast.makeText(getContext(), "Llena el nombre", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (company.getText().toString().isEmpty()) {
+                Toast.makeText(getContext(), "Llena el nombre de la compañia", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (email.getText().toString().isEmpty()) {
+                Toast.makeText(getContext(), "Llena el email", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (phone.getText().toString().isEmpty()) {
+                Toast.makeText(getContext(), "Llena el teléfono", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (!email.getText().toString().matches("^(([^<>()\\[\\]\\\\.,;:\\s@\"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$")) {
+                Toast.makeText(getContext(), "El email no es valido", Toast.LENGTH_SHORT).show();
                 return;
             }
             try {

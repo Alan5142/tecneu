@@ -12,6 +12,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.mercadolibre.android.sdk.ApiRequestListener;
 import com.mercadolibre.android.sdk.ApiResponse;
 import com.mercadolibre.android.sdk.Meli;
@@ -20,7 +24,10 @@ import com.tecneu.tecneu.Products.ProductFragment.OnListFragmentInteractionListe
 import com.tecneu.tecneu.R;
 import com.tecneu.tecneu.dummy.DummyContent.DummyItem;
 import com.tecneu.tecneu.models.Product;
+import com.tecneu.tecneu.services.OnRequest;
+import com.tecneu.tecneu.services.ProductService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -110,6 +117,48 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
                                         return;
                                     }
                                     Toast.makeText(activity, "Modificado con exito", Toast.LENGTH_SHORT).show();
+                                    Meli.asyncGet("/sites/MLM/search?seller_id=250734247", new ApiRequestListener() {
+                                        @Override
+                                        public void onRequestProcessed(int requestCode, ApiResponse response) {
+                                            if (response.getContent() != null) {
+                                                ArrayList<Product> products = new ArrayList<>();
+                                                JsonObject json = new JsonParser().parse(response.getContent()).getAsJsonObject();
+                                                JsonArray items = json.getAsJsonArray("results");
+                                                for (JsonElement element : items) {
+                                                    JsonObject productObject = element.getAsJsonObject();
+                                                    Product product = new Product();
+                                                    product.currency = productObject.get("currency_id").getAsString();
+                                                    product.price = productObject.get("price").getAsBigDecimal();
+                                                    product.id = productObject.get("id").getAsString();
+                                                    product.title = productObject.get("title").getAsString();
+                                                    product.availableQuantity = productObject.get("available_quantity").getAsBigDecimal();
+                                                    product.image = productObject.get("thumbnail").getAsString();
+                                                    products.add(product);
+                                                    try {
+                                                        ProductService.changeStock(activity.getBaseContext(), product.id, Integer.parseInt(product.availableQuantity.toString()), new OnRequest() {
+                                                            @Override
+                                                            public void onSuccess(Object result) {
+                                                            }
+
+                                                            @Override
+                                                            public void onError() {
+                                                            }
+                                                        });
+                                                    } catch (Exception e) {
+
+                                                    }
+                                                }
+                                                ProductsRecyclerViewAdapter adapter = ProductsRecyclerViewAdapter.this;
+                                                adapter.mValues = products;
+                                                adapter.notifyDataSetChanged();
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onRequestStarted(int requestCode) {
+
+                                        }
+                                    });
                                 }
 
                                 @Override

@@ -100,8 +100,18 @@ public class ModifyUserFragment extends Fragment {
             userToEdit.names = name.getText().toString();
             userToEdit.surnames = surname.getText().toString();
 
-            if (userToEdit.username.isEmpty() || userToEdit.names.isEmpty() || userToEdit.surnames.isEmpty()) {
-                Toast.makeText(getContext(), "Llena los campos", Toast.LENGTH_SHORT).show();
+            if (userToEdit.username.isEmpty()) {
+                Toast.makeText(getContext(), "Llena el nombre de usuario", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (userToEdit.names.isEmpty()) {
+                Toast.makeText(getContext(), "Llena el/los nombres de la persona", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (userToEdit.surnames.isEmpty()) {
+                Toast.makeText(getContext(), "Llena los apellidos", Toast.LENGTH_SHORT).show();
                 return;
             }
 

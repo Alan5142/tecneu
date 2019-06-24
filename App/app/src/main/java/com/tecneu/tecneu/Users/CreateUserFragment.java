@@ -85,13 +85,25 @@ public class CreateUserFragment extends Fragment {
         Button create = view.findViewById(R.id.fragment_create_user_create_btn);
 
         create.setOnClickListener((View v) -> {
+            if (password.getText().toString().isEmpty()) {
+                Toast.makeText(getContext(), "La contraseña no puede estar vacia", Toast.LENGTH_SHORT).show();
+                return;
+            }
             if (!password.getText().toString().equals(repeatPassword.getText().toString())) {
                 Toast.makeText(getContext(), "Las contraseñas no coinciden", Toast.LENGTH_SHORT)
                         .show();
                 return;
             }
-            if (username.getText().toString().isEmpty() || name.getText().toString().isEmpty() || surname.getText().toString().isEmpty()) {
-                Toast.makeText(getContext(), "Llena los campos", Toast.LENGTH_SHORT).show();
+            if (username.getText().toString().isEmpty()) {
+                Toast.makeText(getContext(), "Llena el nombre de usuario", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (name.getText().toString().isEmpty()) {
+                Toast.makeText(getContext(), "Llena el/los nombres de la persona", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (surname.getText().toString().isEmpty()) {
+                Toast.makeText(getContext(), "Llena el/los apellidos de la persona", Toast.LENGTH_SHORT).show();
                 return;
             }
             String userType;
@@ -99,8 +111,11 @@ public class CreateUserFragment extends Fragment {
                 case R.id.fragment_create_user_permissions_admin:
                     userType = "admin";
                     break;
-                default:
+                case R.id.fragment_create_user_permissions_standard:
                     userType = "estandar";
+                default:
+                    Toast.makeText(getContext(), "Llena el permiso", Toast.LENGTH_SHORT).show();
+                    return;
             }
             try {
                 UserService

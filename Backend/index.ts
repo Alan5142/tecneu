@@ -9,6 +9,7 @@ import {ProviderController} from "./controllers/provider.controller";
 import * as fs from "fs";
 import {startConnection} from "./sensors";
 import ordersController = require('./controllers/orders.controller.js');
+import {ProductsController} from "./controllers/products.controller";
 
 const bodyParser = require('body-parser');
 
@@ -53,6 +54,7 @@ class Server {
         router.use('/users', new userController.UserController().routes);
         router.use('/providers', new providerController.ProviderController().routes);
         router.use('/orders', new ordersController.OrdersController().routes);
+        router.use('/products', new ProductsController().routes);
         apiRouter.use('/api', router);
         this.app.use(apiRouter);
     }

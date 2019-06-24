@@ -100,10 +100,28 @@ public class ModifyProviderFragment extends Fragment {
             providerToEdit.email = email.getText().toString();
             providerToEdit.phoneNumber = phone.getText().toString();
 
-            if (providerToEdit.personName.isEmpty() || providerToEdit.companyName.isEmpty() || providerToEdit.email.isEmpty() ||
-                !providerToEdit.email.matches("/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/") ||
-                 providerToEdit.phoneNumber.isEmpty()) {
-                Toast.makeText(getContext(), "Llena los campos", Toast.LENGTH_SHORT).show();
+            if (providerToEdit.personName.isEmpty()) {
+                Toast.makeText(getContext(), "Llena el nombre de la persona", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (providerToEdit.companyName.isEmpty()) {
+                Toast.makeText(getContext(), "Llena el nombre de la compañia", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (providerToEdit.email.isEmpty()) {
+                Toast.makeText(getContext(), "Llena el email", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (providerToEdit.phoneNumber.isEmpty()) {
+                Toast.makeText(getContext(), "Llena el nombre de la persona", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (!providerToEdit.email.matches("^(([^<>()\\[\\]\\\\.,;:\\s@\"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$")) {
+                Toast.makeText(getContext(), "El email no es valido", Toast.LENGTH_SHORT).show();
                 return;
             }
 
