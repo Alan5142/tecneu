@@ -91,12 +91,12 @@ module Route {
                 }
                 const body = req.body;
                 const currentInfo = result[0];
-                const company = body.company ? body.company : currentInfo.company_name;
-                const name = body.name ? body.name : currentInfo.person_name;
+                const company = body.companyName ? body.companyName : currentInfo.company_name;
+                const name = body.personName ? body.personName : currentInfo.person_name;
                 const email = body.email ? body.email : currentInfo.email;
                 const phoneNumber = body.phoneNumber ? body.phoneNumber : currentInfo.phone_number;
 
-                database.connection.query('UPDATE provider SET ' +
+                database.connection.query('UPDATE `provider` SET ' +
                     'company_name = ?, ' +
                     'person_name = ?, ' +
                     'email = ?, ' +

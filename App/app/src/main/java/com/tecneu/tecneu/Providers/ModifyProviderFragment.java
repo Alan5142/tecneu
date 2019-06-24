@@ -125,7 +125,7 @@ public class ModifyProviderFragment extends Fragment {
                 return;
             }
 
-            if (providerToEdit.phoneNumber.length() != 11) {
+            if (providerToEdit.phoneNumber.length() != 13) {
                 Toast.makeText(getContext(), "El teléfono debe ser de 11 digitos", Toast.LENGTH_SHORT).show();
                 return;
             }
