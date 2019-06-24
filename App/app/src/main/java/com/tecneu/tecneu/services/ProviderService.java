@@ -57,7 +57,7 @@ public class ProviderService
 
         StringRequest jsObjRequest = new StringRequest(Request.Method.GET, url,
                 response -> {
-                    Gson gson = new GsonBuilder().setDateFormat("dd-MM-yyyy HH:mm:ss").create();
+                    Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
 
                     ArrayList<Provider> users = gson.fromJson(response, new TypeToken<ArrayList<Provider>>(){}.getType());
                     onRequest.onSuccess(users);

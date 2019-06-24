@@ -106,7 +106,7 @@ public class CreateProviderFragment extends Fragment {
             }
 
             if (phone.getText().toString().length() != 13) {
-                Toast.makeText(getContext(), "El numero debe ser de 11 digitos", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "El numero debe ser de 13 digitos", Toast.LENGTH_SHORT).show();
                 return;
             }
             try {
