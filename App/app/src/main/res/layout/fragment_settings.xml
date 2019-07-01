@@ -18,5 +18,11 @@
         android:text="@string/settings_fragment_meli"
         android:background="#fff159"
         android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/fragment_settings_changep_btn"
+        android:layout_width="match_parent"
+        android:text="@string/settings_fragment_changep"
+        android:background="#a4a4a4"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

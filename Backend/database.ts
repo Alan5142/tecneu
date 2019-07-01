@@ -10,9 +10,6 @@ module Database {
         database : config.database.name
     });
     conn.connect();
-    conn.on('error', e => {
-       console.error(e);
-    });
     export const connection = conn;
 }
 

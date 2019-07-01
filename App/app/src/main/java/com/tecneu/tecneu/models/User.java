@@ -8,6 +8,7 @@ public class User {
     public String username;
     public String names;
     public String surnames;
+    public String password;
     public int rfid;
     public Date birthdate;
     public Date creationDate;

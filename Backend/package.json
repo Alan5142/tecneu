@@ -25,6 +25,7 @@
     "install": "^0.12.2",
     "jsonwebtoken": "^8.5.1",
     "mercadolibre": "0.0.13",
-    "mysql": "^2.16.0"
+    "mysql": "^2.16.0",
+    "socket.io": "^2.2.0"
   }
 }

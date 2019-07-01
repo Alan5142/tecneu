@@ -1,5 +1,6 @@
 package com.tecneu.tecneu;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,6 +17,8 @@ import com.mercadolibre.android.sdk.AccessToken;
 import com.mercadolibre.android.sdk.Identity;
 import com.mercadolibre.android.sdk.Meli;
 
+import java.util.Objects;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,6 +32,8 @@ public class SettingsFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
 
     private OnFragmentInteractionListener mListener;
+
+    public MainScreenActivity activity;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -69,6 +74,14 @@ public class SettingsFragment extends Fragment {
         meliButton.setOnClickListener(v -> {
             Identity identity = Meli.getCurrentIdentity(getContext());
             Meli.startLogin(getActivity(), 300);
+        });
+        Button changePass = view.findViewById(R.id.fragment_settings_changep_btn);
+        changePass.setOnClickListener(v -> {
+            Objects.requireNonNull(getActivity())
+                .getSupportFragmentManager()
+                .beginTransaction().addToBackStack(null)
+                .replace(R.id.fragment, ConfirmPassword.newInstance())
+                .commit();
         });
     }
 

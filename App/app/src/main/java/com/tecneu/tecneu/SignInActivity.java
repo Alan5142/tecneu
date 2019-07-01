@@ -51,25 +51,32 @@ public class SignInActivity extends AppCompatActivity {
         }
 
         _signInButton.setOnClickListener((View v) -> {
-            try {
-                UserService.login(this, _usernameText.getText().toString(),
-                        _passwordText.getText().toString(), new OnRequest() {
-                    @Override
-                    public void onSuccess(Object result) {
-                        Intent intent = new Intent(SignInActivity.this, MainScreenActivity.class);
-                        finish();
-                        startActivity(intent);
-                    }
-
-                    @Override
-                    public void onError() {
-                        Toast.makeText(SignInActivity.this, "Las credenciales estan mal", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            } catch (JSONException e) {
-                Toast.makeText(this, "No se pudo iniciar sesión", Toast.LENGTH_SHORT).show();
+            if(_usernameText.getText().toString().equals("")||_passwordText.getText().toString().equals(""))
+            {
+                Toast.makeText(SignInActivity.this, "Rellene todos los campos", Toast.LENGTH_SHORT).show();
+            }
+            else
+            {
+                try {
+                    UserService.login(this, _usernameText.getText().toString(),
+                            _passwordText.getText().toString(), new OnRequest() {
+                        @Override
+                        public void onSuccess(Object result) {
+                            Intent intent = new Intent(SignInActivity.this, MainScreenActivity.class);
+                            finish();
+                            startActivity(intent);
+                        }
+                        @Override
+                        public void onError() {
+                            Toast.makeText(SignInActivity.this, "Las credenciales estan mal", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                } catch (JSONException e) {
+                    Toast.makeText(this, "No se pudo iniciar sesión", Toast.LENGTH_SHORT).show();
+                }
             }
         });
+
     }
 
     public Context getContext()

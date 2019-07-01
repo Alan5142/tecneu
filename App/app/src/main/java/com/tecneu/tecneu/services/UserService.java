@@ -31,12 +31,17 @@ import java.util.Map;
 public class UserService {
     private final static String TOKEN = "tecneu.TOKEN";
     private final static String USER_TYPE = "tecneu.USER_TYPE";
+    private final static String USER_NAME = "tecneu.USER_NAME";
 
     public static void login(Context context, String username, String password, OnRequest onLoginRequest) throws JSONException {
         assert (onLoginRequest != null);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         RequestQueue queue = Volley.newRequestQueue(context);
         String url = context.getString(R.string.api_url) + "/users/login";
+
+        username = username.equals("")? sharedPreferences.getString(USER_NAME, ""):username;
+
+        final String user = username;
 
         JSONObject request = new JSONObject();
         request.put("username", username);
@@ -47,7 +52,8 @@ public class UserService {
                     try {
                         sharedPreferences.edit() // guardar token y tipo de usuario
                                 .putString(TOKEN, response.getString("token"))
-                                .putString(USER_TYPE, response.getString("userType")).apply();
+                                .putString(USER_TYPE, response.getString("userType"))
+                                .putString(USER_NAME, user).apply();
                         Log.d("t", "Value: " + sharedPreferences.getString(TOKEN, ""));
                         onLoginRequest.onSuccess(null);
                     } catch (JSONException e) {
@@ -86,6 +92,11 @@ public class UserService {
     public static String getUserType(Context context) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         return sharedPreferences.getString(USER_TYPE, "");
+    }
+
+    public static String getUserName(Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return sharedPreferences.getString(USER_NAME, "");
     }
 
     public static void getAllUsers(Context context, OnRequest onRequest){
@@ -167,6 +178,30 @@ public class UserService {
         StringRequest jsObjRequest = new StringRequest(Request.Method.DELETE, url,
                 response -> {
                     onRequest.onSuccess(null);
+                },
+                error -> onRequest.onError()) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Content-Type", "application/json");
+                headers.put("Authorization", "Bearer " + UserService.getToken(context));
+                return headers;
+            }
+
+        };
+        queue.add(jsObjRequest);
+    }
+
+    public static void getCurrentUser(Context context, OnRequest onRequest) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        RequestQueue queue = Volley.newRequestQueue(context);
+        String url = context.getString(R.string.api_url) + "/users/me";
+
+        StringRequest jsObjRequest = new StringRequest(Request.Method.GET, url,
+                response -> {
+                    Gson gson = new Gson();
+                    User u = gson.fromJson(response, User.class);
+                    onRequest.onSuccess(u);
                 },
                 error -> onRequest.onError()) {
             @Override

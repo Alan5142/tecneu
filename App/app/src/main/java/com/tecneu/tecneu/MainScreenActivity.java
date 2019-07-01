@@ -43,7 +43,9 @@ public class MainScreenActivity extends AppCompatActivity
         CreateProviderFragment.OnFragmentInteractionListener,
         MainScreenFragment.OnFragmentInteractionListener,
         SettingsFragment.OnFragmentInteractionListener,
-        ProductFragment.OnListFragmentInteractionListener {
+        ProductFragment.OnListFragmentInteractionListener,
+        ConfirmPassword.OnFragmentInteractionListener,
+        ChangePassFragment.OnFragmentInteractionListener{
 
     DrawerLayout _drawer;
     NavigationView navigationView;
@@ -82,7 +84,7 @@ public class MainScreenActivity extends AppCompatActivity
 
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment, MainScreenFragment.newInstance())
+                .replace(R.id.fragment,MainScreenFragment.newInstance())
                 .commit();
 
     }

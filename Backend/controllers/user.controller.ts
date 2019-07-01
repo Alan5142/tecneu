@@ -11,6 +11,12 @@ module Route {
     export class UserController {
         get routes(): express.Router {
             const router = express.Router();
+
+            router.get('/me', expressJwt({
+                secret: config.jwtSecret,
+                getToken: fromHeaderOrQuerystring
+            }), this.getCurrentUser.bind(this.getCurrentUser));
+
             router.get('/:id', this.getUserWithId.bind(this.getUserWithId));
             router.get('', expressJwt({
                 secret: config.jwtSecret,
@@ -24,7 +30,31 @@ module Route {
 
             // login
             router.post('/login', this.login.bind(this.login));
+
             return router;
+        }
+
+        private getCurrentUser(req: express.Request | any, res: express.Response) {
+            database.connection.query('select idUser            as id,\n' +
+                '       name              as userType,\n' +
+                '       username,\n' +
+                '       names,\n' +
+                '       surnames,\n' +
+                '       rfid,\n' +
+                '       birthdate,\n' +
+                '       creation_date     as creationDate,\n' +
+                '       modification_date as modificationDate,\n' +
+                '       u.name as userType\n' +
+                'from user\n' +
+                '       inner join user_type u on user.idUserType = u.idUserType where idUser = ?', [req.user.id], (err, result) => {
+                if (err || result.length !== 1) {
+                    res.status(404);
+                    res.send({});
+                    return;
+                }
+                res.status(200);
+                res.send(result[0]);
+            })
         }
 
         private getAllUsers(req: express.Request | any, res: express.Response) {
@@ -109,7 +139,7 @@ module Route {
         }
 
         private login(req: express.Request, res: express.Response) {
-            database.connection.query('SELECT username, password, user_type.name as type ' +
+            database.connection.query('SELECT idUser, username, password, user_type.name as type ' +
                 'from user, user_type where username = ? and user.idUserType = user_type.idUserType',
                 [req.body.username],
                 (err, result) => {
