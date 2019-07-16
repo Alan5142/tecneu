@@ -1,5 +1,6 @@
 package com.tecneu.tecneu.Users;
 
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,14 +15,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.tecneu.tecneu.R;
+import com.tecneu.tecneu.models.DaySchedule;
 import com.tecneu.tecneu.services.OnRequest;
 import com.tecneu.tecneu.services.UserService;
 
 import org.json.JSONException;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -36,9 +42,13 @@ import java.util.Objects;
 public class CreateUserFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
+    private List<DaySchedule> daySchedules;
+    private boolean daySchedulesFullfiled;
 
     public CreateUserFragment() {
         // Required empty public constructor
+        daySchedules = new ArrayList<>();
+        daySchedulesFullfiled = false;
     }
 
     /**
@@ -78,6 +88,51 @@ public class CreateUserFragment extends Fragment {
         EditText repeatPassword = view.findViewById(R.id.fragment_create_user_repeat_password);
         TextView text = view.findViewById(R.id.textView2);
         RadioGroup permissions = view.findViewById(R.id.fragment_create_user_permissions);
+
+        // lunes
+        view.findViewById(R.id.fragment_create_user_monday).setOnClickListener(v -> showDateDialogForDay(0, 1));
+
+        // martes
+        view.findViewById(R.id.fragment_create_user_tuesday).setOnClickListener(v -> showDateDialogForDay(1, 1));
+
+        // miercoles
+        view.findViewById(R.id.fragment_create_user_wednesday).setOnClickListener(v -> showDateDialogForDay(2, 1));
+
+        // jueves
+        view.findViewById(R.id.fragment_create_user_thursday).setOnClickListener(v -> showDateDialogForDay(3, 1));
+
+        // viernes
+        view.findViewById(R.id.fragment_create_user_friday).setOnClickListener(v -> showDateDialogForDay(4, 1));
+
+        // sabado
+        view.findViewById(R.id.fragment_create_user_saturday).setOnClickListener(v -> showDateDialogForDay(5, 1));
+
+        // domingo
+        view.findViewById(R.id.fragment_create_user_sunday).setOnClickListener(v -> showDateDialogForDay(6, 1));
+
+        // puerta 2
+
+        // lunes
+        view.findViewById(R.id.fragment_create_user_monday_2).setOnClickListener(v -> showDateDialogForDay(0, 2));
+
+        // martes
+        view.findViewById(R.id.fragment_create_user_tuesday_2).setOnClickListener(v -> showDateDialogForDay(1, 2));
+
+        // miercoles
+        view.findViewById(R.id.fragment_create_user_wednesday_2).setOnClickListener(v -> showDateDialogForDay(2, 2));
+
+        // jueves
+        view.findViewById(R.id.fragment_create_user_thursday_2).setOnClickListener(v -> showDateDialogForDay(3, 2));
+
+        // viernes
+        view.findViewById(R.id.fragment_create_user_friday_2).setOnClickListener(v -> showDateDialogForDay(4, 2));
+
+        // sabado
+        view.findViewById(R.id.fragment_create_user_saturday_2).setOnClickListener(v -> showDateDialogForDay(5, 2));
+
+        // domingo
+        view.findViewById(R.id.fragment_create_user_sunday_2).setOnClickListener(v -> showDateDialogForDay(6, 2));
+
         if (UserService.getUserType(getContext()).equals("admin")) {
             permissions.setVisibility(View.GONE);
             text.setVisibility(View.GONE);
@@ -106,6 +161,7 @@ public class CreateUserFragment extends Fragment {
                 Toast.makeText(getContext(), "Llena el/los apellidos de la persona", Toast.LENGTH_SHORT).show();
                 return;
             }
+
             String userType;
             switch (permissions.getCheckedRadioButtonId()) {
                 case R.id.fragment_create_user_permissions_admin:
@@ -126,6 +182,7 @@ public class CreateUserFragment extends Fragment {
                                 userType,
                                 name.getText().toString(),
                                 surname.getText().toString(),
+                                daySchedules,
                                 new OnRequest() {
                                     @Override
                                     public void onSuccess(Object result) {
@@ -150,6 +207,44 @@ public class CreateUserFragment extends Fragment {
                         .show();
             }
         });
+    }
+
+    private void showDateDialogForDay(int day, int door) {
+        TimePickerDialog startDate = new TimePickerDialog(getContext(), (view, hourOfDay, minute) -> {
+            DaySchedule schedule = new DaySchedule();
+            schedule.startHour = hourOfDay;
+            schedule.startMinute = minute;
+            schedule.weekDay = day;
+            schedule.door = door;
+
+            TimePickerDialog endDate = new TimePickerDialog(getContext(), (v, h, m) -> {
+                schedule.endHour = h;
+                schedule.endMinute = m;
+
+                if (schedule.startHour < schedule.endHour || (schedule.startHour == schedule.endHour && schedule.startMinute < schedule.endMinute)) {
+                    int i;
+                    for (i = 0; i < daySchedules.size(); i++) {
+                        if (daySchedules.get(i).weekDay == day && daySchedules.get(i).door == door) {
+                            break;
+                        }
+                    }
+                    if (i == daySchedules.size())
+                        daySchedules.add(schedule);
+                    else
+                        daySchedules.set(i, schedule);
+                    Toast.makeText(getContext(), "Horario ingresado", Toast.LENGTH_SHORT).show();
+                } else
+                    Toast.makeText(getContext(), "La hora de inicio y fin ingresada no son validas", Toast.LENGTH_SHORT).show();
+
+            }, 0, 0, true);
+
+            endDate.setCancelable(false);
+            endDate.show();
+            Toast.makeText(getContext(), "Ingresa la hora de fin de acceso", Toast.LENGTH_LONG).show();
+        }, 0, 0, true);
+        startDate.setCancelable(false);
+        startDate.show();
+        Toast.makeText(getContext(), "Ingresa la hora de inicio de acceso", Toast.LENGTH_LONG).show();
     }
 
     // TODO: Rename method, update argument and hook method into UI event

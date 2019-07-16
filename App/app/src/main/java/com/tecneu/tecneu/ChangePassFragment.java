@@ -19,6 +19,8 @@ import com.tecneu.tecneu.services.UserService;
 
 import org.json.JSONException;
 
+import java.util.Objects;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -80,6 +82,15 @@ public class ChangePassFragment extends Fragment {
                         UserService.modifyUser(getContext(), user, new OnRequest() {
                             @Override
                             public void onSuccess(Object result) {
+                                Utility.hideKeyboardFrom(getContext(), getView());
+
+                                Objects.requireNonNull(getActivity())
+                                        .getSupportFragmentManager()
+                                        .beginTransaction()
+                                        .replace(R.id.fragment, SettingsFragment.newInstance())
+                                        .addToBackStack(null)
+                                        .commit();
+
                                 Toast.makeText(getContext(), "Modificado con exito", Toast.LENGTH_SHORT).show();
                             }
 

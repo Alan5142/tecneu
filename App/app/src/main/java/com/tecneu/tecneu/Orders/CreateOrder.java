@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,9 +22,14 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.tecneu.tecneu.R;
+import com.tecneu.tecneu.models.Product;
 import com.tecneu.tecneu.models.Provider;
+import com.tecneu.tecneu.models.ProviderProduct;
 import com.tecneu.tecneu.services.OnRequest;
+import com.tecneu.tecneu.services.OrderService;
 import com.tecneu.tecneu.services.ProviderService;
+
+import org.json.JSONException;
 
 import java.util.ArrayList;
 
@@ -38,6 +44,9 @@ import java.util.ArrayList;
  */
 public class CreateOrder extends Fragment {
     private OnFragmentInteractionListener mListener;
+    private Provider selectedProvider;
+    private ProviderProduct selectedProduct;
+    private ArrayList<Pair<Provider, ProviderProduct>> orderProducts = new ArrayList<>();
 
     public CreateOrder() {
         // Required empty public constructor
@@ -77,6 +86,7 @@ public class CreateOrder extends Fragment {
         EditText providerName = view.findViewById(R.id.fragment_create_order_provider_search);
         ListView orderInformation = view.findViewById(R.id.fragment_create_order_order_details);
         Button searchProviderButton = view.findViewById(R.id.fragment_create_order_provider_search_btn);
+        Button searchProduct = view.findViewById(R.id.fragment_create_order_product_search_btn);
         Button addToOrderButton = view.findViewById(R.id.fragment_create_order_product_add_btn);
         EditText productName = view.findViewById(R.id.fragment_create_order_product_search);
         EditText productQuantity = view.findViewById(R.id.fragment_create_order_product_quantity);
@@ -94,7 +104,10 @@ public class CreateOrder extends Fragment {
                     builderSingle.setNegativeButton("CANCELAR", (dialog, which) -> dialog.dismiss());
 
                     builderSingle.setAdapter(providersAdapter, (dialog, which) -> {
+                        selectedProvider = providers.get(which);
+                        selectedProduct = null;
                         providerName.setText(providers.get(which).companyName);
+                        productName.setText("");
                         idProvider = which;
                     });
                     builderSingle.show();
@@ -105,6 +118,34 @@ public class CreateOrder extends Fragment {
                 }
             });
         });
+
+        searchProduct.setOnClickListener(v -> {
+            AlertDialog.Builder builderSingle = new AlertDialog.Builder(getContext());
+            builderSingle.setTitle("Elige producto");
+            ProviderService.getProviderProducts(getContext(), providerName.getText().toString(), new OnRequest() {
+                @Override
+                public void onSuccess(Object result) {
+                    ArrayList<ProviderProduct> providers = (ArrayList<ProviderProduct>) result;
+                    final ArrayAdapter<String> providersAdapter = new ArrayAdapter<>(getContext(), android.R.layout.select_dialog_singlechoice);
+                    for (ProviderProduct p : providers) {
+                        providersAdapter.add(p.name + ", $" + p.price);
+                    }
+                    builderSingle.setNegativeButton("CANCELAR", (dialog, which) -> dialog.dismiss());
+
+                    builderSingle.setAdapter(providersAdapter, (dialog, which) -> {
+                        selectedProduct = providers.get(which);
+                        productName.setText(selectedProduct.name);
+                        idProvider = which;
+                    });
+                    builderSingle.show();
+                }
+
+                @Override
+                public void onError() {
+                }
+            });
+        });
+
         addToOrderButton.setOnClickListener(v -> {
             try {
                 int quantity = Integer.parseInt(productQuantity.getText().toString());
@@ -116,6 +157,8 @@ public class CreateOrder extends Fragment {
                     Toast.makeText(getContext(), "El producto no puede estar vacio", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                selectedProduct.stock = quantity;
+                orderProducts.add(new Pair<>(selectedProvider, selectedProduct));
                 ListAdapter adapter = orderInformation.getAdapter();
                 if (adapter == null) {
                     adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1);
@@ -126,6 +169,24 @@ public class CreateOrder extends Fragment {
             } catch(Exception e) {
                 Log.e("", e.getMessage());
                 Toast.makeText(getContext(), "No se pudo agregar", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        view.findViewById(R.id.fragment_create_order_create_order).setOnClickListener(v -> {
+            try {
+                OrderService.createOrder(getContext(), orderProducts, new OnRequest() {
+                    @Override
+                    public void onSuccess(Object result) {
+                        Toast.makeText(getContext(), "Orden creada con éxito", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onError() {
+                        Toast.makeText(getContext(), "No se pudo crear la orden", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
         });
     }

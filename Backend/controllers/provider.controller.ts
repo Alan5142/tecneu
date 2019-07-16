@@ -7,11 +7,9 @@ import {genSalt, hash} from "bcryptjs";
 
 module Route {
     export class ProviderController {
-        constructor() {
-        }
-
         get routes(): express.Router {
             const router = express.Router();
+            router.get('/:providerName/products', this.getProviderProducts.bind(this.getProviderProducts));
             router.get('/:id', this.getProviderWithId.bind(this.getProviderWithId));
             router.get('', expressJwt({
                 secret: config.jwtSecret,
@@ -113,6 +111,18 @@ module Route {
                 });
 
             })
+        }
+
+        private getProviderProducts(req: express.Request, res: express.Response) {
+            database.connection.query(`select product.idProduct, product.mercadolibre_id as meliId, product.name, product.stock, price
+from product inner join have_product hp on product.idProduct = hp.idProduct
+inner join provider p on hp.idProvider = p.idProvider where p.company_name = ?`, [req.params.providerName], (err, results) => {
+                if (err) {
+                    res.status(400).send({});
+                    return;
+                }
+                res.status(200).send(results);
+            });
         }
     }
 }

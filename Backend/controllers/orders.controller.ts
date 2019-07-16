@@ -12,7 +12,35 @@ module Route {
                 secret: config.jwtSecret,
                 getToken: fromHeaderOrQuerystring
             }), this.getAllOrders.bind(this.getAllOrders));
+            router.post('', this.createOrder.bind(this.createOrder));
             return router;
+        }
+
+        createOrder(req: express.Request, res: express.Response) {
+            database.connection.query(`INSERT INTO \`order\` (idPersonReceiving, 
+            idPaymentMethod, order_status, tracking_number, creation_date, modification_date, invoice)
+             VALUES (NULL, NULL, '', '', NOW(), NOW(), NULL)`, (err, results) => {
+                if (err) {
+                    console.error(err);
+                    res.status(400).send({});
+                    return;
+                }
+                let counter = 0;
+                for (let i = 0; i < req.body.products.length; i++) {
+                    const product = req.body.products[i];
+                    database.connection.query(`INSERT INTO contains_product (idOrder, idProduct, quantity) 
+                    VALUES(?, ?, ?)`, [results.insertId, product.idProduct, product.quantity], (err1, results1) => {
+                       if (err1) {
+                           console.error(err1);
+                           return;
+                       }
+                       counter++;
+                       if (counter === req.body.products.length) {
+                           res.send(200).send({});
+                       }
+                    });
+                }
+            });
         }
 
         getAllOrders(req: express.Request, res: express.Response) {

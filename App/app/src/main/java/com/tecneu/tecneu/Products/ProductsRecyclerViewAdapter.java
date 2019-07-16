@@ -145,7 +145,7 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
                                                             }
                                                         });
                                                     } catch (Exception e) {
-
+                                                        Log.e(ProductsRecyclerViewAdapter.class.getName(), e.getMessage());
                                                     }
                                                 }
                                                 ProductsRecyclerViewAdapter adapter = ProductsRecyclerViewAdapter.this;

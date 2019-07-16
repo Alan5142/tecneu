@@ -18,8 +18,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.tecneu.tecneu.R;
+import com.tecneu.tecneu.models.DaySchedule;
 import com.tecneu.tecneu.models.User;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -124,7 +126,7 @@ public class UserService {
         queue.add(jsObjRequest);
     }
 
-    public static void createUser(Context context, String username, String password, String userType, String name, String surname, OnRequest onRequest) throws JSONException {
+    public static void createUser(Context context, String username, String password, String userType, String name, String surname, List<DaySchedule> schedules, OnRequest onRequest) throws JSONException {
         RequestQueue queue = Volley.newRequestQueue(context);
         String url = context.getString(R.string.api_url) + "/users";
         JSONObject request = new JSONObject();
@@ -133,6 +135,17 @@ public class UserService {
         request.put("userType", userType);
         request.put("surnames", surname);
         request.put("names", name);
+
+        JSONArray hours = new JSONArray();
+        for (DaySchedule schedule: schedules) {
+            JSONObject object = new JSONObject();
+            object.put("start", schedule.startHour + ":" + schedule.startMinute + ":00");
+            object.put("end", schedule.endHour + ":" + schedule.endMinute + ":00");
+            object.put("day", schedule.weekDay + 1);
+            object.put("door", schedule.door);
+            hours.put(object);
+        }
+        request.put("schedules", hours);
 
         JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.POST, url, request,
                 response -> onRequest.onSuccess(null),
@@ -149,7 +162,6 @@ public class UserService {
     }
 
     public static void modifyUser(Context context, User user, OnRequest onRequest) throws JSONException {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         RequestQueue queue = Volley.newRequestQueue(context);
         String url = context.getString(R.string.api_url) + "/users/" + user.id;
         Gson gson = new Gson();
@@ -171,7 +183,6 @@ public class UserService {
     }
 
     public static void deleteUser(Context context, int userId, OnRequest onRequest) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         RequestQueue queue = Volley.newRequestQueue(context);
         String url = context.getString(R.string.api_url) + "/users/" + userId;
 
@@ -193,7 +204,6 @@ public class UserService {
     }
 
     public static void getCurrentUser(Context context, OnRequest onRequest) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         RequestQueue queue = Volley.newRequestQueue(context);
         String url = context.getString(R.string.api_url) + "/users/me";
 

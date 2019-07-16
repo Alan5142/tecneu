@@ -75,6 +75,7 @@ public class ConfirmPassword extends Fragment {
                         _passwordText.getText().toString(), new OnRequest() {
                             @Override
                             public void onSuccess(Object result) {
+                                Utility.hideKeyboardFrom(getContext(), getView());
                                 Objects.requireNonNull(getActivity())
                                         .getSupportFragmentManager()
                                         .beginTransaction()

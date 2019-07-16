@@ -85,4 +85,5 @@
     <string name="meli_redirect_uri">https://localhost:3000/api/meli/redirect</string>
     <string name="cuser_fragment_user_person_name">Nombre de la persona</string>
     <string name="cuser_fragment_user_surname">Apellidos</string>
+    <string name="cuser_fragment_edit_access">Modificar accesos</string>
 </resources>

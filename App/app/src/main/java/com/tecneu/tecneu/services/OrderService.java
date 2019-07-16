@@ -3,6 +3,7 @@ package com.tecneu.tecneu.services;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Pair;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -16,7 +17,9 @@ import com.google.gson.reflect.TypeToken;
 import com.tecneu.tecneu.R;
 import com.tecneu.tecneu.models.Order;
 import com.tecneu.tecneu.models.Provider;
+import com.tecneu.tecneu.models.ProviderProduct;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -25,15 +28,26 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class OrderService {
-    public static void createOrder(Context context, String company, String name, String email, long phoneNumber, OnRequest onRequest) throws JSONException {
+    public static void createOrder(Context context, ArrayList<Pair<Provider, ProviderProduct>> products, OnRequest onRequest) throws JSONException {
         RequestQueue queue = Volley.newRequestQueue(context);
-        String url = context.getString(R.string.api_url) + "/providers";
+        String url = context.getString(R.string.api_url) + "/orders";
 
         JSONObject request = new JSONObject();
-        request.put("company", company);
-        request.put("name", name);
-        request.put("email", email);
-        request.put("phoneNumber", phoneNumber);
+        JSONArray productsArray = new JSONArray();
+        for (Pair<Provider, ProviderProduct> product : products) {
+            JSONObject productJson = new JSONObject();
+            Provider provider = product.first;
+            ProviderProduct providerProduct = product.second;
+            productJson.put("providerId", provider.id);
+            productJson.put("companyName", provider.companyName);
+            productJson.put("idProduct", providerProduct.idProduct);
+            productJson.put("price", providerProduct.price);
+            productJson.put("name", providerProduct.name);
+            productJson.put("quantity", providerProduct.stock);
+            productsArray.put(productJson);
+        }
+        request.put("products", productsArray);
+
 
         JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.POST, url, request,
                 response -> onRequest.onSuccess(null),
@@ -57,7 +71,8 @@ public class OrderService {
                 response -> {
                     Gson gson = new GsonBuilder().setDateFormat("dd-MM-yyyy HH:mm:ss").create();
 
-                    ArrayList<Order> users = gson.fromJson(response, new TypeToken<ArrayList<Order>>(){}.getType());
+                    ArrayList<Order> users = gson.fromJson(response, new TypeToken<ArrayList<Order>>() {
+                    }.getType());
                     onRequest.onSuccess(users);
                 },
                 error -> onRequest.onError()) {

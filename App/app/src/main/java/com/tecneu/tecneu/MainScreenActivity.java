@@ -49,7 +49,6 @@ public class MainScreenActivity extends AppCompatActivity
 
     DrawerLayout _drawer;
     NavigationView navigationView;
-    Toolbar _toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,8 +111,6 @@ public class MainScreenActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
-
-
     }
 
     @Override

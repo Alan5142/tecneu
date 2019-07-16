@@ -129,7 +129,17 @@ module Route {
                             }
                             res.status(200);
                             res.send({});
-                            io.emit('registerFingerprint', {userId: result.insertedId});
+                            io.emit('registerFingerprint', {userId: result.insertId});
+                            for (let i = 0; i < body.schedules.length; ++i) {
+                                const daySchedule = body.schedules[i];
+                                database.connection.query(`INSERT INTO acces_shedule (idUser, idWeekday, idDoor, start_time, end_time) VALUES(?, ?, ?, ?, ?)`, [
+                                    result.insertId, daySchedule.day, daySchedule.door, daySchedule.start, daySchedule.end
+                                ], (e, r) => {
+                                   if (e) {
+                                       console.log(e);
+                                   }
+                                });
+                            }
                             return;
                         });
                     });
