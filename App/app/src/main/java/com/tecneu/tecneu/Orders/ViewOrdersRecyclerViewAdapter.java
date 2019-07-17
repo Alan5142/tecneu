@@ -1,8 +1,10 @@
 package com.tecneu.tecneu.Orders;
 
+import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,15 +14,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tecneu.tecneu.Orders.ViewOrdersFragment.OnListFragmentInteractionListener;
-import com.tecneu.tecneu.Providers.ModifyProviderFragment;
-import com.tecneu.tecneu.Providers.ProviderRecyclerViewAdapter;
 import com.tecneu.tecneu.R;
 import com.tecneu.tecneu.dummy.DummyContent.DummyItem;
 import com.tecneu.tecneu.models.Order;
-import com.tecneu.tecneu.models.Provider;
+import com.tecneu.tecneu.models.OrderInfo;
 import com.tecneu.tecneu.services.OnRequest;
 import com.tecneu.tecneu.services.OrderService;
-import com.tecneu.tecneu.services.ProviderService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +37,7 @@ public class ViewOrdersRecyclerViewAdapter extends RecyclerView.Adapter<ViewOrde
     private final OnListFragmentInteractionListener mListener;
     AppCompatActivity activity;
 
-    ViewOrdersRecyclerViewAdapter(List<Order> items, OnListFragmentInteractionListener listener, AppCompatActivity Activity) {
+    ViewOrdersRecyclerViewAdapter(ArrayList<Order> items, OnListFragmentInteractionListener listener, AppCompatActivity Activity) {
         activity = Activity;
         mValues = items;
         mValuesFiltered = mValues;
@@ -52,10 +51,11 @@ public class ViewOrdersRecyclerViewAdapter extends RecyclerView.Adapter<ViewOrde
         ViewHolder holder = new ViewHolder(view);
         view.setOnClickListener(v -> {
             AlertDialog.Builder alert = new AlertDialog.Builder(activity);
-            alert.setTitle(holder.mItem.tracking_number);
+            alert.setTitle("Orden " + String.valueOf(holder.mItem.idOrder));
             alert.setMessage("Decida que hacer con la orden");
+            /*
             alert.setPositiveButton("Eliminar", (dialog, which) ->
-                    ProviderService.deleteProvider(activity.getBaseContext(), holder.mItem.idOrder, new OnRequest() {
+                    OrderService.deleteOrder(activity.getBaseContext(), holder.mItem.idOrder, new OnRequest() {
                         @Override
                         public void onSuccess(Object result) {
                             Toast.makeText(activity, "Eliminado", Toast.LENGTH_SHORT).show();
@@ -63,7 +63,7 @@ public class ViewOrdersRecyclerViewAdapter extends RecyclerView.Adapter<ViewOrde
                             OrderService.getAllOrders(activity.getBaseContext(), new OnRequest() {
                                 @Override
                                 public void onSuccess(Object result) {
-                                    list.mValues = (List<Order>) result;
+                                    list.mValues = (ArrayList<Order>) result;
                                     list.notifyDataSetChanged();
                                 }
 
@@ -80,27 +80,25 @@ public class ViewOrdersRecyclerViewAdapter extends RecyclerView.Adapter<ViewOrde
                             Toast.makeText(activity, "No se pudo eliminar", Toast.LENGTH_SHORT).show();
                         }
                     }));
-            alert.setNeutralButton("Modificar", (dialog, which) -> {
-                activity
-                        .getSupportFragmentManager()
+                    */
+            alert.setNeutralButton("Ver detalles", (dialog, which) -> {
+                activity.getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.fragment, ModifyOrdersFragment.newInstance(holder.mItem))
+                        .replace(R.id.fragment, com.tecneu.tecneu.Orders.Order.newInstance(holder.mItem.idOrder))
                         .commit();
             });
             alert.setNegativeButton("Cancelar", null);
             alert.show();
         });
-        return new ViewHolder(view);
+        return holder;
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mModificationDate.setText("Fecha de modificación: " + holder.mItem.modification_date.toString());
-        holder.mCreationDate.setText("Fecha de creación: " + holder.mItem.creation_date.toString());
-        holder.mPersonReceiving.setText("Persona que recibirá: " + holder.mItem.personR);
-        holder.mTrackingNumber.setText("C. de rastreo: " + holder.mItem.tracking_number);
-        holder.mPaymentMethod.setText("Método de pago: " + holder.mItem.payment);
+        holder.mPaymentMethod.setText("Id de orden: " + holder.mItem.idOrder);
+        holder.mModificationDate.setText("Fecha de modificación: " + holder.mItem.modificationDate.toString());
+        holder.mCreationDate.setText("Fecha de creación: " + holder.mItem.creationDate.toString());
     }
 
     @Override
@@ -132,6 +130,7 @@ public class ViewOrdersRecyclerViewAdapter extends RecyclerView.Adapter<ViewOrde
             return super.toString();
         }
     }
+
     public Filter getFilter() {
         return new Filter() {
             @Override
@@ -142,11 +141,7 @@ public class ViewOrdersRecyclerViewAdapter extends RecyclerView.Adapter<ViewOrde
                 } else {
                     List<Order> filteredList = new ArrayList<>();
                     for (Order row : mValues) {
-                        // name match condition. this might differ depending on your requirement
-                        // here we are looking for name or phone number match
-                        if (row.tracking_number.toLowerCase().contains(charString.toLowerCase()) ||
-                                row.personR.contains(charString.toLowerCase()) ||
-                                row.payment.contains(charString.toLowerCase())) {
+                        if (String.valueOf(row.idOrder).toLowerCase().contains(charString.toLowerCase()) || row.creationDate.toString().toLowerCase().contains(charString.toLowerCase())) {
                             filteredList.add(row);
                         }
                     }

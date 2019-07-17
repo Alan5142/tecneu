@@ -3,15 +3,14 @@ import * as database from '../database';
 import * as config from "../config.json";
 import * as expressJwt from 'express-jwt'
 import {fromHeaderOrQuerystring} from "../jwt-utilty";
+import _ = require('lodash');
 
 module Route {
     export class OrdersController {
         get routes(): express.Router {
             const router = express.Router();
-            router.get('', expressJwt({
-                secret: config.jwtSecret,
-                getToken: fromHeaderOrQuerystring
-            }), this.getAllOrders.bind(this.getAllOrders));
+            router.get('/:idOrder/products', this.getOrderProducts.bind(this.getOrderProducts));
+            router.get('', this.getAllOrders.bind(this.getAllOrders));
             router.post('', this.createOrder.bind(this.createOrder));
             return router;
         }
@@ -43,18 +42,23 @@ module Route {
             });
         }
 
+        getOrderProducts(req: express.Request, res: express.Response) {
+            database.connection.query(`select quantity, p.idProduct, mercadolibre_id as meliId, stock, name, hp.price
+from \`order\` inner join contains_product cp on \`order\`.idOrder = cp.idOrder
+inner join product p on cp.idProduct = p.idProduct
+inner join have_product hp on p.idProduct = hp.idProduct where cp.idOrder = ?`, [req.params.idOrder], (err, results) => {
+                res.status(200).send(results);
+            })
+        }
+
         getAllOrders(req: express.Request, res: express.Response) {
-            database.connection.query("SELECT tecneu.order.*, person_receiving.name as 'personR'," +
-                " payment_method.name AS 'payment' FROM tecneu.order, tecneu.person_receiving, " +
-                "tecneu.payment_method WHERE tecneu.person_receiving.idPersonReceiving = tecneu.order.idPersonReceiving" +
-                " AND tecneu.payment_method.idPaymentMethod = tecneu.order.idPaymentMethod", (err, result) => {
+            database.connection.query(`select idOrder, creation_date as creationDate, modification_date as modificationDate
+from \`order\``, (err, results) => {
                 if (err) {
-                    res.status(400);
-                    res.send({});
+                    res.status(400).send({});
                     return;
                 }
-                res.status(200);
-                res.send(result);
+                res.status(200).send(results);
             });
         }
 
@@ -64,7 +68,11 @@ module Route {
 
         deleteOrder(req: express.Request, res: express.Response) {
             database.connection.query('DELETE * FROM orders where orderId = ?', [req.params.id], (err, result) => {
-
+                if (err) {
+                    res.status(400).send({});
+                    return;
+                }
+                res.status(200).send({});
             });
         }
     }

@@ -9,6 +9,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,10 +22,12 @@ import com.tecneu.tecneu.R;
 import com.tecneu.tecneu.dummy.DummyContent;
 import com.tecneu.tecneu.dummy.DummyContent.DummyItem;
 import com.tecneu.tecneu.models.Order;
+import com.tecneu.tecneu.models.OrderInfo;
 import com.tecneu.tecneu.models.Provider;
 import com.tecneu.tecneu.services.OnRequest;
 import com.tecneu.tecneu.services.OrderService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -82,7 +85,7 @@ public class ViewOrdersFragment extends Fragment {
                 public void onSuccess(Object result) {
                     LinearLayoutManager llm = new LinearLayoutManager(getContext());
                     recyclerView.setLayoutManager(llm);
-                    recyclerView.setAdapter(new ViewOrdersRecyclerViewAdapter((List<Order>) result, mListener, (AppCompatActivity)getActivity()));
+                    recyclerView.setAdapter(new ViewOrdersRecyclerViewAdapter((ArrayList<Order>) result, mListener, (AppCompatActivity)getActivity()));
                     DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getContext(), llm.getOrientation());
                     recyclerView.addItemDecoration(dividerItemDecoration);
                 }

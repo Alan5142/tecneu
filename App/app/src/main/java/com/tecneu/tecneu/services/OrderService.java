@@ -16,6 +16,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.tecneu.tecneu.R;
 import com.tecneu.tecneu.models.Order;
+import com.tecneu.tecneu.models.OrderInfo;
 import com.tecneu.tecneu.models.Provider;
 import com.tecneu.tecneu.models.ProviderProduct;
 
@@ -109,14 +110,40 @@ public class OrderService {
         queue.add(jsObjRequest);
     }
 
-    public static void deleteProvider(Context context, int providerId, OnRequest onRequest) {
+    public static void deleteOrder(Context context, int orderId, OnRequest onRequest) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         RequestQueue queue = Volley.newRequestQueue(context);
-        String url = context.getString(R.string.api_url) + "/providers/" + providerId; // xd providerss
+        String url = context.getString(R.string.api_url) + "/orders/" + orderId; // xd providerss
 
         StringRequest jsObjRequest = new StringRequest(Request.Method.DELETE, url,
                 response -> {
                     onRequest.onSuccess(null);
+                },
+                error -> onRequest.onError()) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Content-Type", "application/json");
+                headers.put("Authorization", "Bearer " + UserService.getToken(context));
+                return headers;
+            }
+
+        };
+        queue.add(jsObjRequest);
+    }
+
+    public static void getOrderProducts(Context context, int orderId, OnRequest onRequest) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        RequestQueue queue = Volley.newRequestQueue(context);
+        String url = context.getString(R.string.api_url) + "/orders/" + orderId + "/products";
+
+        StringRequest jsObjRequest = new StringRequest(Request.Method.GET, url,
+                response -> {
+                    Gson gson = new GsonBuilder().setDateFormat("dd-MM-yyyy HH:mm:ss").create();
+
+                    ArrayList<OrderInfo> products = gson.fromJson(response, new TypeToken<ArrayList<OrderInfo>>() {
+                    }.getType());
+                    onRequest.onSuccess(products);
                 },
                 error -> onRequest.onError()) {
             @Override
