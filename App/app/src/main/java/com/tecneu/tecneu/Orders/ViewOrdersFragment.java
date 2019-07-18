@@ -85,7 +85,8 @@ public class ViewOrdersFragment extends Fragment {
                 public void onSuccess(Object result) {
                     LinearLayoutManager llm = new LinearLayoutManager(getContext());
                     recyclerView.setLayoutManager(llm);
-                    recyclerView.setAdapter(new ViewOrdersRecyclerViewAdapter((ArrayList<Order>) result, mListener, (AppCompatActivity)getActivity()));
+                    recyclerViewAdapter = new ViewOrdersRecyclerViewAdapter((ArrayList<Order>) result, mListener, (AppCompatActivity)getActivity());
+                    recyclerView.setAdapter(recyclerViewAdapter);
                     DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getContext(), llm.getOrientation());
                     recyclerView.addItemDecoration(dividerItemDecoration);
                 }

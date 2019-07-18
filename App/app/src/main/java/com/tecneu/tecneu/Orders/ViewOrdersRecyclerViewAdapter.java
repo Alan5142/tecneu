@@ -103,6 +103,9 @@ public class ViewOrdersRecyclerViewAdapter extends RecyclerView.Adapter<ViewOrde
 
     @Override
     public int getItemCount() {
+        if (mValuesFiltered == null) {
+
+        }
         return mValuesFiltered.size();
     }
 
@@ -141,7 +144,9 @@ public class ViewOrdersRecyclerViewAdapter extends RecyclerView.Adapter<ViewOrde
                 } else {
                     List<Order> filteredList = new ArrayList<>();
                     for (Order row : mValues) {
-                        if (String.valueOf(row.idOrder).toLowerCase().contains(charString.toLowerCase()) || row.creationDate.toString().toLowerCase().contains(charString.toLowerCase())) {
+                        if (String.valueOf(row.idOrder).toLowerCase().contains(charString.toLowerCase()) ||
+                                row.creationDate.toString().toLowerCase().contains(charString.toLowerCase()) ||
+                                row.orderStatus.toLowerCase().contains(charString.toLowerCase())) {
                             filteredList.add(row);
                         }
                     }

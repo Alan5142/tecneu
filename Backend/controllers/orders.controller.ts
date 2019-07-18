@@ -52,7 +52,7 @@ inner join have_product hp on p.idProduct = hp.idProduct where cp.idOrder = ?`, 
         }
 
         getAllOrders(req: express.Request, res: express.Response) {
-            database.connection.query(`select idOrder, creation_date as creationDate, modification_date as modificationDate
+            database.connection.query(`select idOrder, creation_date as creationDate, modification_date as modificationDate, order_status as orderStatus
 from \`order\``, (err, results) => {
                 if (err) {
                     res.status(400).send({});

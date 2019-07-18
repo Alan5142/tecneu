@@ -9,4 +9,5 @@ public class Order {
     public String trackingNumber;
     public Date creationDate;
     public Date modificationDate;
+    public String orderStatus;
 }
