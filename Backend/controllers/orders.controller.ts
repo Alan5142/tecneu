@@ -45,7 +45,7 @@ module Route {
         getOrderProducts(req: express.Request, res: express.Response) {
             database.connection.query(`select quantity, p.idProduct, mercadolibre_id as meliId, stock, name, hp.price
 from \`order\` inner join contains_product cp on \`order\`.idOrder = cp.idOrder
-inner join product p on cp.idProduct = p.idProduct
+inner join products p on cp.idProduct = p.idProduct
 inner join have_product hp on p.idProduct = hp.idProduct where cp.idOrder = ?`, [req.params.idOrder], (err, results) => {
                 res.status(200).send(results);
             })
