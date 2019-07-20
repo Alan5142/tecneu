@@ -63,6 +63,30 @@
         app:layout_constraintTop_toBottomOf="@+id/fragment_modify_provider_email" />
 
     <Button
+        android:id="@+id/fragment_modify_provider_products"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="Agregar productos"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fragment_modify_provider_phone" />
+
+    <Button
+        android:id="@+id/fragment_modify_provider_remove_products"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="Eliminar productos"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fragment_modify_provider_products" />
+
+    <Button
         android:id="@+id/fragment_modify_provider_modify_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -70,11 +94,12 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:text="@string/cprovider_fragment_create_provider"
+        android:text="@string/cprovider_fragment_modify_provider"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fragment_modify_provider_phone"
+        app:layout_constraintTop_toBottomOf="@+id/fragment_modify_provider_remove_products"
         app:layout_constraintVertical_bias="0.0" />
 
 </android.support.constraint.ConstraintLayout>

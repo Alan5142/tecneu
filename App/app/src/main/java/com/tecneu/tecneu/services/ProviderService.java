@@ -18,12 +18,14 @@ import com.tecneu.tecneu.models.Provider;
 import com.tecneu.tecneu.models.ProviderProduct;
 import com.tecneu.tecneu.models.User;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ProviderService
@@ -75,12 +77,17 @@ public class ProviderService
         queue.add(jsObjRequest);
     }
 
-    public static void modifyProvider(Context context, Provider provider, OnRequest onRequest) throws JSONException {
+    public static void modifyProvider(Context context, Provider provider, List<ProviderProduct> selectedProducts, List<ProviderProduct> productsToDelete, OnRequest onRequest) throws JSONException {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         RequestQueue queue = Volley.newRequestQueue(context);
         String url = context.getString(R.string.api_url) + "/providers/" + provider.id;
         Gson gson = new Gson();
         JSONObject object = new JSONObject(gson.toJson(provider));
+        JSONArray selectedProductsJson = new JSONArray(gson.toJson(selectedProducts, new TypeToken<List<ProviderProduct>>() {}.getType()));
+        JSONArray nonselectedProductsJson = new JSONArray(gson.toJson(productsToDelete, new TypeToken<List<ProviderProduct>>() {}.getType()));
+
+        object.put("selectedProducts", selectedProductsJson);
+        object.put("productsToDelete", nonselectedProductsJson);
 
         JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.PUT, url, object,
                 response -> onRequest.onSuccess(null),

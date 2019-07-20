@@ -1,5 +1,6 @@
 package com.tecneu.tecneu.Providers;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -7,25 +8,26 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioGroup;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.tecneu.tecneu.R;
-import com.tecneu.tecneu.Users.ModifyUserFragment;
 import com.tecneu.tecneu.models.Provider;
-import com.tecneu.tecneu.models.User;
+import com.tecneu.tecneu.models.ProviderProduct;
 import com.tecneu.tecneu.services.OnRequest;
+import com.tecneu.tecneu.services.ProductService;
 import com.tecneu.tecneu.services.ProviderService;
-import com.tecneu.tecneu.services.UserService;
 
 import org.json.JSONException;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 /**
@@ -41,6 +43,8 @@ public class ModifyProviderFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private ArrayList<ProviderProduct> selectedProducts;
+    private ArrayList<ProviderProduct> nonSelectedProducts;
 
     // TODO: Rename and change types of parameters
     private Provider providerToEdit;
@@ -69,9 +73,44 @@ public class ModifyProviderFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        selectedProducts = new ArrayList<>();
+        nonSelectedProducts = new ArrayList<>();
         if (getArguments() != null) {
             String json = getArguments().getString(ARG_PARAM1);
             providerToEdit = new Gson().fromJson(json, Provider.class);
+            ProviderService.getProviderProducts(getContext(), providerToEdit.companyName, new OnRequest() {
+                @Override
+                public void onSuccess(Object result) {
+                    selectedProducts = (ArrayList<ProviderProduct>) result;
+                    ProductService.getProducts(getContext(), new OnRequest() {
+                        @Override
+                        public void onSuccess(Object result) {
+                            ArrayList<ProviderProduct> providerProducts = (ArrayList<ProviderProduct>) result;
+                            if (selectedProducts.isEmpty()) {
+                                nonSelectedProducts = providerProducts;
+                                return;
+                            }
+                            for (ProviderProduct p : providerProducts) {
+                                for (ProviderProduct u : selectedProducts) {
+                                    if (p.idProduct != u.idProduct) {
+                                        nonSelectedProducts.add(p);
+                                    }
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onError() {
+
+                        }
+                    });
+                }
+
+                @Override
+                public void onError() {
+
+                }
+            });
         }
     }
 
@@ -131,7 +170,11 @@ public class ModifyProviderFragment extends Fragment {
             }
 
             try {
-                ProviderService.modifyProvider(getContext(), providerToEdit, new OnRequest() {
+                ProviderService.modifyProvider(getContext(),
+                        providerToEdit,
+                        selectedProducts,
+                        nonSelectedProducts,
+                        new OnRequest() {
                     @Override
                     public void onSuccess(Object result) {
                         Toast.makeText(getContext(), "Modificado con exito", Toast.LENGTH_SHORT).show();
@@ -152,6 +195,126 @@ public class ModifyProviderFragment extends Fragment {
             } catch (JSONException e) {
                 Toast.makeText(getContext(), "No se pudo editar", Toast.LENGTH_SHORT).show();
             }
+        });
+
+        view.findViewById(R.id.fragment_modify_provider_products).setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle("Elige un producto para agregar");
+
+            ArrayList<String> productsName = new ArrayList<>();
+
+            for (ProviderProduct databaseProduct : nonSelectedProducts) {
+                productsName.add(databaseProduct.name);
+            }
+
+            builder.setNegativeButton("Cancelar", ((dialog, which) -> {
+
+            }));
+
+            builder.setItems(productsName.toArray(new String[0]), (dialog, which) -> {
+                ProviderProduct product = nonSelectedProducts.get(which);
+                AlertDialog.Builder priceBuilder = new AlertDialog.Builder(getContext());
+                priceBuilder.setTitle("Precio del proveedor");
+                EditText editText = new EditText(getContext());
+                editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT);
+                editText.setLayoutParams(lp);
+
+                priceBuilder.setView(editText);
+
+                priceBuilder.setNegativeButton("Cancelar", null);
+                priceBuilder.setPositiveButton("Establecer precio", (dialog1, which1) -> {
+                    product.price = Integer.valueOf(editText.getText().toString());
+                    selectedProducts.add(product);
+                    nonSelectedProducts.remove(which);
+                    Toast.makeText(getContext(), "Añadido", Toast.LENGTH_SHORT).show();
+                });
+
+                priceBuilder.show();
+            });
+            builder.show();
+            /*
+            ProductService.getProducts(getContext(), new OnRequest() {
+                @Override
+                public void onSuccess(Object result) {
+                    ArrayList<ProviderProduct> products = (ArrayList<ProviderProduct>) result;
+                    ArrayList<String> productsName = new ArrayList<>();
+
+                    for (ProviderProduct databaseProduct : products) {
+                        productsName.add(databaseProduct.name);
+                    }
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setTitle("Elige un producto");
+
+                    builder.setNegativeButton("Cancelar", ((dialog, which) -> {
+
+                    }));
+
+                    builder.setItems(productsName.toArray(new String[0]), (dialog, which) -> {
+                        ProviderProduct product = products.get(which);
+                        for (int i = 0; i < selectedProducts.size(); i++) {
+                            ProviderProduct p = selectedProducts.get(i);
+                            if (p.idProduct == product.idProduct) {
+                                selectedProducts.remove(i);
+                                Toast.makeText(getContext(), "Producto eliminado del vendedor", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                        }
+                        AlertDialog.Builder priceBuilder = new AlertDialog.Builder(getContext());
+                        priceBuilder.setTitle("Precio del proveedor");
+                        EditText editText = new EditText(getContext());
+                        editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+                        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.MATCH_PARENT,
+                                LinearLayout.LayoutParams.MATCH_PARENT);
+                        editText.setLayoutParams(lp);
+
+                        priceBuilder.setView(editText);
+
+                        priceBuilder.setNegativeButton("Cancelar", null);
+                        priceBuilder.setPositiveButton("Establecer precio", (dialog1, which1) -> {
+                            product.price = Integer.valueOf(editText.getText().toString());
+                            selectedProducts.add(product);
+                            Toast.makeText(getContext(), "Añadido", Toast.LENGTH_SHORT).show();
+                        });
+
+                        priceBuilder.show();
+                    });
+                    builder.show();
+                }
+
+                @Override
+                public void onError() {
+
+                }
+            });
+            */
+        });
+
+        view.findViewById(R.id.fragment_modify_provider_remove_products).setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle("Elige un producto para eliminar");
+
+            ArrayList<String> productsName = new ArrayList<>();
+
+            for (ProviderProduct databaseProduct : selectedProducts) {
+                productsName.add(databaseProduct.name);
+            }
+
+            builder.setNegativeButton("Cancelar", ((dialog, which) -> {
+
+            }));
+
+            builder.setItems(productsName.toArray(new String[0]), (dialog, which) -> {
+                ProviderProduct product = selectedProducts.get(which);
+
+                nonSelectedProducts.add(product);
+                selectedProducts.remove(which);
+            });
+            builder.show();
         });
     }
 

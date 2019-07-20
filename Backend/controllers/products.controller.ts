@@ -5,8 +5,16 @@ module Route {
     export class ProductsController {
         get routes(): express.Router {
             const router = express.Router();
+            router.get('/', this.getAllProducts.bind(this.getAllProducts));
             router.post('/', this.modifyProducts.bind(this.modifyProducts));
             return router;
+        }
+
+        getAllProducts(req: express.Request, res: express.Response) {
+            database.connection.query(`select idProduct, name, price, mercadolibre_id as meliId, stock
+from products`, (err, results) => {
+                res.status(200).send(results);
+            })
         }
 
         modifyProducts(req: express.Request, res: express.Response) {

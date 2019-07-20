@@ -10,3 +10,4 @@ public class Product {
     public String id;
     public BigDecimal availableQuantity;
 }
+

@@ -109,7 +109,18 @@ module Route {
                     res.status(200);
                     res.send({});
                 });
+                const selectedProducts = req.body.selectedProducts as Array<any>;
+                let productsToDelete = req.body.productsToDelete as Array<any>;
+                productsToDelete = productsToDelete.filter(value => !selectedProducts.find(value1 => value1.idProduct === value.idProduct));
+                selectedProducts.forEach(value => {
+                    database.connection.query(`insert into have_product (idProvider, idProduct, price)
+values (?, ?, ?)`, [req.params.idProvider, value.idProduct, value.price], err1 => {console.error(err1)});
+                });
 
+                productsToDelete.forEach(value => {
+                    database.connection.query(`delete from have_product where idProvider = ? and idProduct = ?`,
+                        [req.params.idProvider, value.idProduct], err1 => {console.error(err1)});
+                });
             })
         }
 
@@ -123,6 +134,10 @@ inner join provider p on hp.idProvider = p.idProvider where p.company_name = ?`,
                 }
                 res.status(200).send(results);
             });
+        }
+
+        private setProviderProducts(req: express.Request, res: express.Response) {
+
         }
     }
 }

@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.tecneu.tecneu.R;
+import com.tecneu.tecneu.models.DatabaseProduct;
 import com.tecneu.tecneu.models.Order;
 import com.tecneu.tecneu.models.OrderInfo;
 import com.tecneu.tecneu.models.Provider;
@@ -26,6 +27,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class OrderService {
@@ -88,12 +90,19 @@ public class OrderService {
         queue.add(jsObjRequest);
     }
 
-    public static void modifyProvider(Context context, Provider provider, OnRequest onRequest) throws JSONException {
+    public static void modifyProvider(Context context, Provider provider, List<DatabaseProduct> productList, OnRequest onRequest) throws JSONException {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         RequestQueue queue = Volley.newRequestQueue(context);
         String url = context.getString(R.string.api_url) + "/providers/" + provider.id;
         Gson gson = new Gson();
         JSONObject object = new JSONObject(gson.toJson(provider));
+
+        JSONArray array = new JSONArray();
+        for (DatabaseProduct p: productList) {
+            JSONObject o = new JSONObject(gson.toJson(p));
+            array.put(o);
+        }
+        object.put("products", array);
 
         JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.PUT, url, object,
                 response -> onRequest.onSuccess(null),
