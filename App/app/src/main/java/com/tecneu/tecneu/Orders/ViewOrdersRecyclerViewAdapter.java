@@ -99,6 +99,7 @@ public class ViewOrdersRecyclerViewAdapter extends RecyclerView.Adapter<ViewOrde
         holder.mPaymentMethod.setText("Id de orden: " + holder.mItem.idOrder);
         holder.mModificationDate.setText("Fecha de modificación: " + holder.mItem.modificationDate.toString());
         holder.mCreationDate.setText("Fecha de creación: " + holder.mItem.creationDate.toString());
+        holder.mPersonReceiving.setText("Estado: " + holder.mItem.orderStatus);
     }
 
     @Override

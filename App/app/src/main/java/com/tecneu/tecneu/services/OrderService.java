@@ -157,4 +157,42 @@ public class OrderService {
         };
         queue.add(jsObjRequest);
     }
+
+    public static void deleteOrderProduct(Context context, int productId, OnRequest onRequest) {
+        RequestQueue queue = Volley.newRequestQueue(context);
+        String url = context.getString(R.string.api_url) + "/orders/products/" + productId;
+
+        StringRequest jsObjRequest = new StringRequest(Request.Method.DELETE, url,
+                response -> onRequest.onSuccess(null),
+                error -> onRequest.onError()) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Content-Type", "application/json");
+                headers.put("Authorization", "Bearer " + UserService.getToken(context));
+                return headers;
+            }
+
+        };
+        queue.add(jsObjRequest);
+    }
+
+    public static void modifyOrderStatus(Context context, int orderId, OnRequest onRequest) {
+        RequestQueue queue = Volley.newRequestQueue(context);
+        String url = context.getString(R.string.api_url) + "/orders/" + orderId;
+
+        StringRequest jsObjRequest = new StringRequest(Request.Method.PUT, url,
+                response -> onRequest.onSuccess(null),
+                error -> onRequest.onError()) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Content-Type", "application/json");
+                headers.put("Authorization", "Bearer " + UserService.getToken(context));
+                return headers;
+            }
+
+        };
+        queue.add(jsObjRequest);
+    }
 }

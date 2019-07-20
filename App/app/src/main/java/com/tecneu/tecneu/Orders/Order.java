@@ -6,12 +6,18 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tecneu.tecneu.R;
 import com.tecneu.tecneu.models.OrderInfo;
@@ -58,6 +64,7 @@ public class Order extends Fragment {
 
         Bundle bundle = getArguments();
         orderId = bundle.getInt("orderId");
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -66,6 +73,42 @@ public class Order extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_order, container, false);
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
+        inflater.inflate(R.menu.menu_order, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.fragment_order_options:
+                AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+                alert.setTitle("¿Finalizar?");
+
+                alert.setPositiveButton("Finalizar", (dialog, which) -> {
+                    OrderService.modifyOrderStatus(getContext(), orderId, new OnRequest() {
+                        @Override
+                        public void onSuccess(Object result) {
+                            Toast.makeText(getContext(), "Estado cambiado", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onError() {
+                            Toast.makeText(getContext(), "No se pudo cambiar el estado, probablemente la orden ya fue finalizada", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                });
+
+                alert.setNegativeButton("Cancelar", null);
+                alert.show();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
