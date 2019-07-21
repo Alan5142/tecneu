@@ -169,32 +169,41 @@ public class ModifyProviderFragment extends Fragment {
                 return;
             }
 
-            try {
-                ProviderService.modifyProvider(getContext(),
-                        providerToEdit,
-                        selectedProducts,
-                        nonSelectedProducts,
-                        new OnRequest() {
-                    @Override
-                    public void onSuccess(Object result) {
-                        Toast.makeText(getContext(), "Modificado con exito", Toast.LENGTH_SHORT).show();
-                        getActivity().getSupportFragmentManager()
-                                .beginTransaction()
-                                .replace(R.id.fragment, ProviderFragment.newInstance())
-                                .commit();
-                    }
+            AlertDialog.Builder confirm = new AlertDialog.Builder(getContext());
 
-                    @Override
-                    public void onError() {
-                        Toast.makeText(getContext(), "No se pudo editar", Toast.LENGTH_SHORT).show();
-                        Objects.requireNonNull(getActivity())
-                                .getSupportFragmentManager()
-                                .popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                    }
-                });
-            } catch (JSONException e) {
-                Toast.makeText(getContext(), "No se pudo editar", Toast.LENGTH_SHORT).show();
-            }
+            confirm.setTitle("¿Estas seguro de que quieres modificarlo?");
+
+            confirm.setPositiveButton("Si", (dialog, which) -> {
+                try {
+                    ProviderService.modifyProvider(getContext(),
+                            providerToEdit,
+                            selectedProducts,
+                            nonSelectedProducts,
+                            new OnRequest() {
+                                @Override
+                                public void onSuccess(Object result) {
+                                    Toast.makeText(getContext(), "Modificado con exito", Toast.LENGTH_SHORT).show();
+                                    getActivity().getSupportFragmentManager()
+                                            .beginTransaction()
+                                            .replace(R.id.fragment, ProviderFragment.newInstance())
+                                            .commit();
+                                }
+
+                                @Override
+                                public void onError() {
+                                    Toast.makeText(getContext(), "No se pudo editar", Toast.LENGTH_SHORT).show();
+                                    Objects.requireNonNull(getActivity())
+                                            .getSupportFragmentManager()
+                                            .popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                                }
+                            });
+                } catch (JSONException e) {
+                    Toast.makeText(getContext(), "No se pudo editar", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            confirm.setNegativeButton("No", null);
+            confirm.show();
         });
 
         view.findViewById(R.id.fragment_modify_provider_products).setOnClickListener(v -> {

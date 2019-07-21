@@ -1,5 +1,6 @@
 package com.tecneu.tecneu;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -73,43 +74,52 @@ public class ChangePassFragment extends Fragment {
                 Toast.makeText(v.getContext(), "Longitud minima de 8 caracteres", Toast.LENGTH_SHORT).show();
                 return;
             }
-            UserService.getCurrentUser(getContext(), new OnRequest() {
-                @Override
-                public void onSuccess(Object result) {
-                    User user = (User) result;
-                    user.password = password.getText().toString();
-                    try {
-                        UserService.modifyUser(getContext(), user, new OnRequest() {
-                            @Override
-                            public void onSuccess(Object result) {
-                                Utility.hideKeyboardFrom(getContext(), getView());
+            AlertDialog.Builder confirm = new AlertDialog.Builder(getContext());
 
-                                Objects.requireNonNull(getActivity())
-                                        .getSupportFragmentManager()
-                                        .beginTransaction()
-                                        .replace(R.id.fragment, SettingsFragment.newInstance())
-                                        .addToBackStack(null)
-                                        .commit();
+            confirm.setTitle("¿Estas seguro de que quieres cambiar la contraseña?");
 
-                                Toast.makeText(getContext(), "Modificado con exito", Toast.LENGTH_SHORT).show();
-                            }
+            confirm.setPositiveButton("Si", (dialog, which) -> {
+                UserService.getCurrentUser(getContext(), new OnRequest() {
+                    @Override
+                    public void onSuccess(Object result) {
+                        User user = (User) result;
+                        user.password = password.getText().toString();
+                        try {
+                            UserService.modifyUser(getContext(), user, new OnRequest() {
+                                @Override
+                                public void onSuccess(Object result) {
+                                    Utility.hideKeyboardFrom(getContext(), getView());
 
-                            @Override
-                            public void onError() {
-                                Toast.makeText(getContext(), "No se pudo modificar", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                                    Objects.requireNonNull(getActivity())
+                                            .getSupportFragmentManager()
+                                            .beginTransaction()
+                                            .replace(R.id.fragment, SettingsFragment.newInstance())
+                                            .addToBackStack(null)
+                                            .commit();
+
+                                    Toast.makeText(getContext(), "Modificado con exito", Toast.LENGTH_SHORT).show();
+                                }
+
+                                @Override
+                                public void onError() {
+                                    Toast.makeText(getContext(), "No se pudo modificar", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Toast.makeText(getContext(), "No se pudo modificar", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onError() {
                         Toast.makeText(getContext(), "No se pudo modificar", Toast.LENGTH_SHORT).show();
                     }
-                }
-
-                @Override
-                public void onError() {
-                    Toast.makeText(getContext(), "No se pudo modificar", Toast.LENGTH_SHORT).show();
-                }
+                });
             });
+
+            confirm.setNegativeButton("No", null);
+            confirm.show();
         });
     }
 

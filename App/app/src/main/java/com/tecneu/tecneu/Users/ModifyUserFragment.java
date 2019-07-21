@@ -1,5 +1,6 @@
 package com.tecneu.tecneu.Users;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -124,29 +125,38 @@ public class ModifyUserFragment extends Fragment {
                     break;
             }
 
-            try {
-                UserService.modifyUser(getContext(), userToEdit, new OnRequest() {
-                    @Override
-                    public void onSuccess(Object result) {
-                        Toast.makeText(getContext(), "Modificado con exito", Toast.LENGTH_SHORT).show();
-                        getActivity().getSupportFragmentManager()
-                                .beginTransaction()
-                                .replace(R.id.fragment, ViewUserFragment.newInstance(1))
-                                .commit();
-                    }
+            AlertDialog.Builder confirm = new AlertDialog.Builder(getContext());
 
-                    @Override
-                    public void onError() {
-                        Toast.makeText(getContext(), "No se pudo editar", Toast.LENGTH_SHORT).show();
-                        getActivity().getSupportFragmentManager()
-                                .beginTransaction()
-                                .replace(R.id.fragment, ViewUserFragment.newInstance(1))
-                                .commit();
-                    }
-                });
-            } catch (JSONException e) {
-                Toast.makeText(getContext(), "No se pudo editar", Toast.LENGTH_SHORT).show();
-            }
+            confirm.setTitle("¿Estas seguro de que quieres modificarlo?");
+
+            confirm.setPositiveButton("Si", (dialog, which) -> {
+                try {
+                    UserService.modifyUser(getContext(), userToEdit, new OnRequest() {
+                        @Override
+                        public void onSuccess(Object result) {
+                            Toast.makeText(getContext(), "Modificado con exito", Toast.LENGTH_SHORT).show();
+                            getActivity().getSupportFragmentManager()
+                                    .beginTransaction()
+                                    .replace(R.id.fragment, ViewUserFragment.newInstance(1))
+                                    .commit();
+                        }
+
+                        @Override
+                        public void onError() {
+                            Toast.makeText(getContext(), "No se pudo editar", Toast.LENGTH_SHORT).show();
+                            getActivity().getSupportFragmentManager()
+                                    .beginTransaction()
+                                    .replace(R.id.fragment, ViewUserFragment.newInstance(1))
+                                    .commit();
+                        }
+                    });
+                } catch (JSONException e) {
+                    Toast.makeText(getContext(), "No se pudo editar", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            confirm.setNegativeButton("No", null);
+            confirm.show();
         });
     }
 
