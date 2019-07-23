@@ -115,6 +115,8 @@ public class ProductFragment extends Fragment {
 
                     }
                 });*/
+
+                // usuario de alan para pruebas 442927967
                 Meli.asyncGet("/sites/MLM/search?seller_id=250734247", new ApiRequestListener() {
                     @Override
                     public void onRequestProcessed(int requestCode, ApiResponse response) {
@@ -128,6 +130,27 @@ public class ProductFragment extends Fragment {
                                 product.currency = productObject.get("currency_id").getAsString();
                                 product.price = productObject.get("price").getAsBigDecimal();
                                 product.id = productObject.get("id").getAsString();
+                                Meli.asyncGetAuth("/items/" + product.id, Meli.getCurrentIdentity(getContext()), new ApiRequestListener() {
+                                    @Override
+                                    public void onRequestProcessed(int requestCode, ApiResponse response) {
+                                        JsonObject productInfo = new JsonParser().parse(response.getContent()).getAsJsonObject();
+                                        product.availableQuantity = productInfo.get("available_quantity").getAsBigDecimal();
+                                        ProductsRecyclerViewAdapter adapter = (ProductsRecyclerViewAdapter) recyclerView.getAdapter();
+                                        if (adapter != null) {
+                                            adapter.mValues = products;
+                                            adapter.notifyDataSetChanged();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onRequestStarted(int requestCode) {
+
+                                    }
+                                });
+                                /*
+                                ApiResponse response1 = Meli.getAuth("/items/" + product.id, Meli.getCurrentIdentity(getContext()));
+                                JsonObject productInfo = new JsonParser().parse(response1.getContent()).getAsJsonObject();*/
+
                                 product.title = productObject.get("title").getAsString();
                                 product.availableQuantity = productObject.get("available_quantity").getAsBigDecimal();
                                 product.image = productObject.get("thumbnail").getAsString();

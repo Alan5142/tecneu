@@ -47,6 +47,7 @@ public class ViewUserFragmentRecyclerViewAdapter extends RecyclerView.Adapter<Vi
             AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
             alert.setTitle(holder.mItem.username);
             alert.setMessage("Decida que hacer con el usuario");
+            /*
             alert.setPositiveButton("Eliminar", (dialog, which) ->
                     UserService.deleteUser(mActivity.getBaseContext(), holder.mItem.id, new OnRequest() {
                 @Override
@@ -73,6 +74,7 @@ public class ViewUserFragmentRecyclerViewAdapter extends RecyclerView.Adapter<Vi
                     Toast.makeText(mActivity, "No se pudo eliminar", Toast.LENGTH_SHORT).show();
                 }
             }));
+            */
             alert.setNeutralButton("Modificar", (dialog, which) -> {
                 mActivity
                         .getSupportFragmentManager()

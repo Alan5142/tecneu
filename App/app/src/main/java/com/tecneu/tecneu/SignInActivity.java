@@ -32,7 +32,6 @@ public class SignInActivity extends AppCompatActivity {
     private EditText _usernameText;
     private EditText _passwordText;
     private Button _signInButton;
-    private Button _forgottenButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +41,6 @@ public class SignInActivity extends AppCompatActivity {
         _usernameText = findViewById(R.id.login_username);
         _passwordText = findViewById(R.id.login_password);
         _signInButton = findViewById(R.id.login_sign_in_btn);
-        _forgottenButton = findViewById(R.id.login_forgotten_password_btn);
 
         if (UserService.isLoggedIn(this)) {
             Intent intent = new Intent(SignInActivity.this, MainScreenActivity.class);

@@ -18,7 +18,7 @@ from products`, (err, results) => {
         }
 
         modifyProducts(req: express.Request, res: express.Response) {
-            database.connection.query('UPDATE product SET stock = ? WHERE mercadolibre_id = ?',
+            database.connection.query('UPDATE products SET stock = ? WHERE mercadolibre_id = ?',
                 [req.body.stock, req.body.id],
                 (err, result) => {
                 if (err) {

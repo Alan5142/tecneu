@@ -90,48 +90,69 @@ public class CreateUserFragment extends Fragment {
         RadioGroup permissions = view.findViewById(R.id.fragment_create_user_permissions);
 
         // lunes
-        view.findViewById(R.id.fragment_create_user_monday).setOnClickListener(v -> showDateDialogForDay(0, 1));
+        Button monday1 = view.findViewById(R.id.fragment_create_user_monday);
+
+        monday1.setOnClickListener(v -> showDateDialogForDay(0, 1, monday1));
 
         // martes
-        view.findViewById(R.id.fragment_create_user_tuesday).setOnClickListener(v -> showDateDialogForDay(1, 1));
+        Button tuesday1 = view.findViewById(R.id.fragment_create_user_tuesday);
+
+        tuesday1.setOnClickListener(v -> showDateDialogForDay(1, 1, tuesday1));
 
         // miercoles
-        view.findViewById(R.id.fragment_create_user_wednesday).setOnClickListener(v -> showDateDialogForDay(2, 1));
+        Button wednesday1 = view.findViewById(R.id.fragment_create_user_wednesday);
+
+        wednesday1.setOnClickListener(v -> showDateDialogForDay(2, 1, wednesday1));
 
         // jueves
-        view.findViewById(R.id.fragment_create_user_thursday).setOnClickListener(v -> showDateDialogForDay(3, 1));
+        Button thursday1 = view.findViewById(R.id.fragment_create_user_thursday);
+        thursday1.setOnClickListener(v -> showDateDialogForDay(3, 1, thursday1));
 
         // viernes
-        view.findViewById(R.id.fragment_create_user_friday).setOnClickListener(v -> showDateDialogForDay(4, 1));
+        Button friday1 = view.findViewById(R.id.fragment_create_user_friday);
+
+        friday1.setOnClickListener(v -> showDateDialogForDay(4, 1, friday1));
 
         // sabado
-        view.findViewById(R.id.fragment_create_user_saturday).setOnClickListener(v -> showDateDialogForDay(5, 1));
+        Button saturday1 = view.findViewById(R.id.fragment_create_user_saturday);
+
+        saturday1.setOnClickListener(v -> showDateDialogForDay(5, 1, saturday1));
 
         // domingo
-        view.findViewById(R.id.fragment_create_user_sunday).setOnClickListener(v -> showDateDialogForDay(6, 1));
+        Button sunday1 = view.findViewById(R.id.fragment_create_user_sunday);
+
+        sunday1.setOnClickListener(v -> showDateDialogForDay(6, 1, sunday1));
 
         // puerta 2
 
         // lunes
-        view.findViewById(R.id.fragment_create_user_monday_2).setOnClickListener(v -> showDateDialogForDay(0, 2));
+        Button monday2 = view.findViewById(R.id.fragment_create_user_monday_2);
+
+        monday2.setOnClickListener(v -> showDateDialogForDay(0, 2, monday2));
 
         // martes
-        view.findViewById(R.id.fragment_create_user_tuesday_2).setOnClickListener(v -> showDateDialogForDay(1, 2));
+        Button tuesday2 = view.findViewById(R.id.fragment_create_user_tuesday_2);
+        tuesday2.setOnClickListener(v -> showDateDialogForDay(1, 2, tuesday2));
 
         // miercoles
-        view.findViewById(R.id.fragment_create_user_wednesday_2).setOnClickListener(v -> showDateDialogForDay(2, 2));
+        Button wednesday2 = view.findViewById(R.id.fragment_create_user_wednesday_2);
+
+        wednesday2.setOnClickListener(v -> showDateDialogForDay(2, 2, wednesday2));
 
         // jueves
-        view.findViewById(R.id.fragment_create_user_thursday_2).setOnClickListener(v -> showDateDialogForDay(3, 2));
+        Button thursday2 = view.findViewById(R.id.fragment_create_user_thursday_2);
+
+        thursday2.setOnClickListener(v -> showDateDialogForDay(3, 2, thursday2));
 
         // viernes
-        view.findViewById(R.id.fragment_create_user_friday_2).setOnClickListener(v -> showDateDialogForDay(4, 2));
+        Button friday2 = view.findViewById(R.id.fragment_create_user_friday_2);
+        friday2.setOnClickListener(v -> showDateDialogForDay(4, 2, (Button) v));
 
         // sabado
-        view.findViewById(R.id.fragment_create_user_saturday_2).setOnClickListener(v -> showDateDialogForDay(5, 2));
+        view.findViewById(R.id.fragment_create_user_saturday_2).setOnClickListener(v -> showDateDialogForDay(5, 2, (Button)v));
 
         // domingo
-        view.findViewById(R.id.fragment_create_user_sunday_2).setOnClickListener(v -> showDateDialogForDay(6, 2));
+        view.findViewById(R.id.fragment_create_user_sunday_2).setOnClickListener(v -> showDateDialogForDay(6, 2, (Button) v));
 
         if (UserService.getUserType(getContext()).equals("admin")) {
             permissions.setVisibility(View.GONE);
@@ -209,7 +230,7 @@ public class CreateUserFragment extends Fragment {
         });
     }
 
-    private void showDateDialogForDay(int day, int door) {
+    private void showDateDialogForDay(int day, int door, Button button) {
         TimePickerDialog startDate = new TimePickerDialog(getContext(), (view, hourOfDay, minute) -> {
             DaySchedule schedule = new DaySchedule();
             schedule.startHour = hourOfDay;

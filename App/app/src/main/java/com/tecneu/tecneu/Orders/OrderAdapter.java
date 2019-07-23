@@ -49,28 +49,25 @@ public class OrderAdapter extends ArrayAdapter<OrderInfo> {
         TextView price = listItem.findViewById(R.id.fragment_order_item_price);
         price.setText(String.format("Precio: %d", currentOrder.price));
 
-        listItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
-                alert.setTitle("¿Eliminar producto de la orden?");
+        listItem.setOnClickListener(v -> {
+            AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
+            alert.setTitle("¿Eliminar producto de la orden?");
 
-                alert.setPositiveButton("Eliminar", (dialog, which) -> {
-                    OrderService.deleteOrderProduct(mContext, currentOrder.idOrderProduct, new OnRequest() {
-                        @Override
-                        public void onSuccess(Object result) {
-                            Toast.makeText(mContext, "Producto eliminado, refresca el menú para mostrar la información actualizada", Toast.LENGTH_SHORT).show();
-                        }
+            alert.setPositiveButton("Eliminar", (dialog, which) -> {
+                OrderService.deleteOrderProduct(mContext, currentOrder.idOrderProduct, new OnRequest() {
+                    @Override
+                    public void onSuccess(Object result) {
+                        Toast.makeText(mContext, "Producto eliminado, refresca el menú para mostrar la información actualizada", Toast.LENGTH_SHORT).show();
+                    }
 
-                        @Override
-                        public void onError() {
-                            Toast.makeText(mContext, "No se pudo eliminar el producto", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    @Override
+                    public void onError() {
+                        Toast.makeText(mContext, "No se pudo eliminar el producto", Toast.LENGTH_SHORT).show();
+                    }
                 });
-                alert.setNegativeButton("Cancelar", null);
-                alert.show();
-            }
+            });
+            alert.setNegativeButton("Cancelar", null);
+            alert.show();
         });
 
         return listItem;
